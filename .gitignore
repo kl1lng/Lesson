@@ -1,0 +1,8 @@
+*.db
+.DS_Store
+.claude/
+Thumbs.db
+__pycache__/
+data/
+node_modules/
+teacher.key

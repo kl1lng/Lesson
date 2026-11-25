@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Интерактивный урок физики для электронной доски: проводники и диэлектрики, виртуальные лаборатории, задания с автопроверкой.">
+<title>PhysLab · Проводники и диэлектрики</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23b45309' d='M13.5 2 5 13.5h5.5L9.5 22 19 9.5h-5.7z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<a class="skip" href="#main">К содержимому</a>
+
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--primary)"/><path fill="#ffd36b" d="M18 5 8 18h6l-1 9 10-13h-6z"/></svg>
+    <div>PhysLab<small>Физика 8 · Проводники и диэлектрики</small></div>
+  </div>
+  <nav class="steps" id="steps" aria-label="Этапы урока"></nav>
+  <div class="tools">
+    <div class="timer" id="timer" role="timer"><small id="phase">Старт</small><span id="clock">10:00</span></div>
+    <button class="ibtn" id="tplay" aria-label="Запустить таймер"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></button>
+    <button class="ibtn" id="treset" aria-label="Сбросить таймер"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></button>
+    <span class="score-pill" id="scorePill" title="Баллы за урок">0 / 10</span>
+    <button class="ibtn" id="tSound" aria-pressed="false" title="Звук зарядов"><svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg></button>
+    <button class="ibtn" id="tTeacher" aria-pressed="false" title="Ответы для учителя (T)"><svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5zM6 11v5c0 1.5 3 3 6 3s6-1.500 6-3v-5"/></svg></button>
+    <button class="ibtn" id="tTheme" aria-label="Тёмная или светлая тема"><svg viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button>
+    <button class="ibtn" id="tFull" aria-label="На весь экран (F)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- 1 ПРОБЛЕМА -->
+<section class="slide" data-title="1 Проблема">
+  <p class="eyebrow">Старт · 10 минут</p>
+  <div class="hero">
+    <div>
+      <h1>Почему результат разный?</h1>
+      <p class="lead">Электроскоп заряжен: листочки разошлись. Касаемся шарика разными предметами.</p>
+      <ul class="big"><li>Пластмассовая линейка: листочки остались разведёнными.</li><li>Рука: листочки опали.</li></ul>
+      <div class="note"><b>Подумайте в парах (1–2 мин):</b> куда делся заряд? Попробуйте сами на модели справа.</div>
+      <div class="row"><button class="btn primary" id="guessBtn">Угадайте тему урока</button></div>
+      <h2 id="topicReveal" class="reveal" style="margin-top:.9rem">Проводники и диэлектрики</h2>
+      <div class="answer"><b>Учителю.</b> Дайте 1–2 минуты на догадки. Ожидаемое: заряд ушёл в землю через руку, пластмасса заряд не пропускает. Тему называйте после ответов.</div>
+    </div>
+    <div class="lab">
+      <div class="lab-head"><span class="tag">Виртуальный электроскоп</span><button class="btn" id="e1Reset">Зарядить снова</button></div>
+      <div id="e1"></div>
+      <p class="feedback" id="e1Msg" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 ЦЕЛИ -->
+<section class="slide" data-title="2 Цели">
+  <p class="eyebrow">Старт · цели урока</p>
+  <h1>Цели урока</h1>
+  <p class="lead">К этому слайду вернёмся в конце урока и честно оценим, достигли мы целей.</p>
+  <div class="grid g3" style="margin-top:1rem">
+    <div class="card"><h3>1</h3><p class="big">Объяснить, чем проводники отличаются от диэлектриков.</p><p class="tag">8.4.1.2</p></div>
+    <div class="card"><h3>2</h3><p class="big">Объяснить электризацию трением и влиянием (индукцией).</p><p class="tag">8.4.1.2</p></div>
+    <div class="card"><h3>3</h3><p class="big">Привести примеры полезной и вредной электризации.</p><p class="tag">8.4.1.3</p></div>
+  </div>
+  <div class="card" style="margin-top:1rem">
+    <h3>Баллы за урок: 10</h3>
+    <p><span class="pts">Этап 1 · 2 балла</span> знание и понимание · <span class="pts">Этап 2 · 6 баллов</span> три задания по 2 балла · <span class="pts">Этап 3 · 2 балла</span> анализ и оценка.</p>
+    <p>Нужна помощь — карточка-подсказка. Закончил раньше — карточка с дополнительными заданиями (баллов не даёт).</p>
+  </div>
+</section>
+
+<!-- 3 ПРОВОДНИКИ -->
+<section class="slide" data-title="3 Проводники">
+  <p class="eyebrow">Новая информация · 9 минут</p>
+  <h2>Проводники и диэлектрики</h2>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Проводники</h3>
+      <p>Хорошо проводят электрические заряды: в них есть <b>свободные подвижные заряды</b>. Металлы, растворы солей, щелочей и кислот, почва, тела человека и животных.</p>
+      <svg viewBox="0 0 320 110" role="img" aria-label="В проводнике свободные электроны движутся"><rect x="4" y="8" width="312" height="94" rx="14" fill="var(--primary-soft)" stroke="var(--primary)" stroke-width="2"/><g id="condDots"></g></svg>
+      <p class="tag">электроны движутся свободно</p>
+    </div>
+    <div class="card">
+      <h3>Диэлектрики (изоляторы)</h3>
+      <p>Не проводят заряды: <b>свободных заряженных частиц нет</b>. Фарфор, эбонит, стекло, янтарь, резина, шёлк, капрон, пластмассы, керосин, воздух. Из них делают изоляторы: резиновые коврики, пластмассовые ручки, изоляционную ленту.</p>
+      <svg viewBox="0 0 320 110" role="img" aria-label="В диэлектрике заряды закреплены"><rect x="4" y="8" width="312" height="94" rx="14" fill="var(--surface-2)" stroke="var(--ink-2)" stroke-width="2"/><g id="dielDots"></g></svg>
+      <p class="tag">заряды закреплены на местах</p>
+    </div>
+  </div>
+  <div class="note warn"><b>Запиши в тетрадь:</b> проводники — есть свободные заряды (металлы, растворы, почва, тело человека). Диэлектрики — свободных зарядов нет (стекло, эбонит, пластмасса, резина, шёлк, воздух). Заряженный электроскоп разряжается, если коснуться его рукой или металлом (заряд стекает в землю), и не разряжается от стеклянной или эбонитовой палочки.</div>
+  <h3 style="margin-top:1rem">Разложи по группам</h3>
+  <p class="empty">Нажми на предмет, потом на нужную группу.</p>
+  <div class="pool" id="sortPool"></div>
+  <div class="grid g2" style="margin-top:.7rem">
+    <div class="zone" id="zoneC" tabindex="0" role="button" aria-label="Группа проводники"><h3>Проводники</h3><div class="pool" id="inC"></div></div>
+    <div class="zone" id="zoneD" tabindex="0" role="button" aria-label="Группа диэлектрики"><h3>Диэлектрики</h3><div class="pool" id="inD"></div></div>
+  </div>
+  <p class="feedback" id="sortMsg"></p>
+</section>
+
+<!-- 4 ЛАБОРАТОРИЯ 1 -->
+<section class="slide" data-title="4 Лаборатория 1">
+  <p class="eyebrow">Виртуальная работа · исследуем материалы</p>
+  <h2>Лаборатория 1. Горит ли лампочка?</h2>
+  <p class="lead">Подключи образец к клеммам X и Y. Лупа показывает, что внутри материала. Заполни таблицу и сделай вывод.</p>
+  <div class="split">
+    <div class="lab"><div id="lamp"></div><p class="tag" style="margin:.6rem 0 .3rem">Выбери материал:</p><div class="pool" id="matPool"></div><p class="feedback" id="lampMsg" aria-live="polite"></p></div>
+    <div class="card">
+      <h3>Результаты опытов</h3>
+      <table><thead><tr><th>Материал</th><th>Лампочка</th><th>Вывод</th></tr></thead><tbody id="lampLog"><tr><td colspan="3" class="empty">Пока нет опытов</td></tr></tbody></table>
+      <div class="note">Лампочка горит — <b>проводник</b>. Не горит — <b>диэлектрик</b>. Опытов: <b id="lampCnt">0</b> из 12.</div>
+      <div class="answer"><b>Учителю.</b> Проводники: медь, железо, графит (грифель; в учебнике 1 его нет, по ЯКлассу проводник), водопроводная вода, раствор соли. Диэлектрики: стекло, пластмасса, резина, сухое дерево, бумага, воздух, фарфор.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 ЛАБОРАТОРИЯ 2: ЭЛЕКТРОСКОП -->
+<section class="slide" data-title="5 Электроскоп">
+  <p class="eyebrow">Виртуальная работа · песочница</p>
+  <h2>Лаборатория 2. Электроскоп</h2>
+  <p class="lead">Потри палочку тканью, перетащи её к шарику, коснись шарика разными предметами. Попробуй сам: что происходит с зарядами и листочками?</p>
+  <div class="split">
+    <div class="lab">
+      <div class="lab-head">
+        <div class="seg" id="rodSeg" role="group" aria-label="Палочка"><button aria-pressed="false" data-r="glass">Стекло + шёлк</button><button aria-pressed="true" data-r="ebonite">Эбонит + мех</button></div>
+        <button class="btn primary" id="rubBtn">Потереть</button>
+      </div>
+      <div id="e2"></div>
+      <div class="row" style="margin-top:.6rem">
+        <button class="btn" id="e2Remove">Убрать палочку</button>
+        <button class="btn" id="e2Zero">Разрядить</button>
+        <div class="seg" id="modeSeg" role="group" aria-label="Показывать заряды"><button aria-pressed="true" data-m="excess">Лишние заряды</button><button aria-pressed="false" data-m="all">Все заряды</button><button aria-pressed="false" data-m="none">Скрыть</button></div>
+      </div>
+      <p class="tag" style="margin:.6rem 0 .3rem">Коснуться шарика предметом:</p>
+      <div id="e2ToolsHost"></div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="readout"><div><span>Заряд</span><b id="roN">0</b></div><div><span>Листочки</span><b id="roTh">0°</b></div><div><span>Палочка</span><b id="roRod">нет</b></div></div>
+        <p class="big" id="e2Narr" aria-live="polite"></p>
+        <div class="legend"><span><i class="dot" style="background:var(--pos)"></i>+ положительный</span><span><i class="dot" style="background:var(--neg)"></i>− электрон</span></div>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Журнал касаний</h3>
+        <table><thead><tr><th>Предмет</th><th>Листочки</th><th>Почему</th></tr></thead><tbody id="e2Log"><tr><td colspan="3" class="empty">Пока нет опытов</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ВЛИЯНИЕ -->
+<section class="slide" data-title="6 Влияние">
+  <p class="eyebrow">Новая информация · электризация влиянием (индукция)</p>
+  <h2>Как зарядить тело, не касаясь его заряженным телом?</h2>
+  <div class="split">
+    <div class="lab">
+      <div id="e3"></div>
+      <div class="row" style="margin-top:.6rem">
+        <button class="btn" id="infPrev">← С начала</button>
+        <button class="btn primary" id="infNext">Шаг 1: потереть палочку →</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 id="infTitle">Шаг 0</h3>
+      <p id="infText" class="big">Нажми «Шаг 1» и наблюдай за зарядами.</p>
+      <p class="tag">Шаг <span id="infNo">0</span> из 5</p>
+      <div class="note warn"><b>Запомни:</b> на электроскопе остаётся <b>индуцированный (наведённый)</b> заряд, <b>противоположный</b> заряду поднесённого тела. Само тело электроскопа не касалось.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 ПРОВЕРКА -->
+<section class="slide" data-title="7 Проверка">
+  <p class="eyebrow">Проверка понимания · 3 минуты</p>
+  <h2>Что произойдёт с заряженным электроскопом, если коснуться его шарика стеклянной палочкой?</h2>
+  <div id="check1"></div><p class="feedback" id="check1Msg"></p>
+  <p class="empty">Покажи ответ пальцами: A — 1, B — 2, C — 3, D — 4.</p>
+  <div class="answer"><b>Учителю.</b> Верный ответ B: стекло — диэлектрик, заряды в землю не уходят. Если ошиблось больше трети класса, повторите, что заряд стекает только по проводнику.</div>
+</section>
+
+<!-- 9 ЭТАП 1 -->
+<section class="slide" data-title="8 Этап 1">
+  <p class="eyebrow">Практика · этап 1 · знание и понимание <span class="pts">2 балла</span></p>
+  <h2>Чем проводники отличаются от диэлектриков?</h2>
+  <p class="lead">Объясни и приведи по три примера каждых (учебник 1, контрольный вопрос 5, стр. 118).</p>
+  <textarea id="s1text" aria-label="Ответ к этапу 1" placeholder="Проводники... Диэлектрики... Примеры: ..."></textarea>
+  <div class="card" style="margin-top:.8rem"><h3>Дескрипторы (отметь, что есть в ответе)</h3>
+    <label class="desc"><input type="checkbox" data-score="s1"><span>объясняет: в проводниках есть свободные подвижные заряды, в диэлектриках их нет — <b>1 балл</b></span></label>
+    <label class="desc"><input type="checkbox" data-score="s1"><span>называет не менее трёх проводников и не менее трёх диэлектриков — <b>1 балл</b></span></label></div>
+  <div class="answer"><b>Ответ.</b> В проводниках есть свободные заряды, в диэлектриках нет. Проводники: металлы, растворы солей и кислот, почва, тело человека. Диэлектрики: стекло, эбонит, пластмасса, резина, шёлк, воздух.</div>
+</section>
+
+<!-- 10 ЭТАП 2 -->
+<section class="slide" data-title="9 Этап 2">
+  <p class="eyebrow">Практика · этап 2 · применение <span class="pts">6 баллов</span></p>
+  <h2>Три задания по 2 балла</h2>
+  <div class="tabs" id="s2tabs"><button class="on" data-t="t1">Задание 1</button><button data-t="t2">Задание 2</button><button data-t="t3">Задание 3</button></div>
+  <div class="card tpane" id="t1">
+    <h3>Задание 1 <span class="pts">2 балла</span> (учебник 1, упр. 12, №1)</h3>
+    <p>Как с помощью отрицательно заряженного металлического шарика зарядить положительно другой шарик, не изменяя заряда первого? Выбери нужные шаги по порядку.</p>
+    <div class="split"><div><p class="tag">Шаги на выбор</p><div class="pool" id="o1pool"></div></div><div><p class="tag">Твой порядок</p><ol class="order" id="o1list"></ol><p class="empty" id="o1empty">Нажимай шаги по порядку.</p></div></div>
+    <div class="row"><button class="btn primary" id="o1check">Проверить</button><button class="btn" id="o1undo">Убрать последний</button><button class="btn" id="o1reset">Сбросить</button></div>
+    <p class="feedback" id="o1msg" aria-live="polite"></p>
+    <div class="answer"><b>Ответ.</b> Нейтральный шарик на изолирующую подставку → поднести отрицательный, не касаясь → коснуться нейтрального рукой → убрать руку → убрать отрицательный шарик. Второй шарик заряжен положительно.</div>
+  </div>
+  <div class="card tpane" id="t2" hidden>
+    <h3>Задание 2 <span class="pts">2 балла</span> (учебник 1, упр. 12, №2)</h3>
+    <p>Как с помощью отрицательно заряженного металлического шарика зарядить два одинаковых шарика равными, но противоположными по знаку зарядами?</p>
+    <div class="split"><div><p class="tag">Шаги на выбор</p><div class="pool" id="o2pool"></div></div><div><p class="tag">Твой порядок</p><ol class="order" id="o2list"></ol><p class="empty" id="o2empty">Нажимай шаги по порядку.</p></div></div>
+    <div class="row"><button class="btn primary" id="o2check">Проверить</button><button class="btn" id="o2undo">Убрать последний</button><button class="btn" id="o2reset">Сбросить</button></div>
+    <p class="feedback" id="o2msg" aria-live="polite"></p>
+    <div class="answer"><b>Ответ.</b> Два шарика на подставках вплотную → поднести отрицательный, не касаясь → раздвинуть шарики → убрать отрицательный. Ближний заряжен «+», дальний «−», заряды равны по модулю.</div>
+  </div>
+  <div class="card tpane" id="t3" hidden>
+    <h3>Задание 3 <span class="pts">2 балла</span></h3>
+    <p>Электроскоп заряжен. К шарику прикасаются по очереди предметами. В каких случаях листочки опадут? Отметь и объясни.</p>
+    <div id="q3"></div><div class="row"><button class="btn primary" id="q3check">Проверить</button></div><p class="feedback" id="q3msg" aria-live="polite"></p>
+    <label class="desc"><input type="checkbox" data-score="s2c"><span>Объяснил(а): медь и тело человека — проводники, стекло и пластмасса — диэлектрики — <b>1 балл</b> (проверяет сосед)</span></label>
+    <div class="answer"><b>Ответ.</b> а) опадут; б) нет; в) нет; г) опадут.</div>
+  </div>
+  <div class="note"><b>Дескрипторы.</b> Задание 1: подносит отрицательный шарик, не касаясь (1); касается рукой, убирает руку, затем шарик (1). Задание 2: шарики вплотную, поднос без касания (1); раздвигает, потом убирает заряженное тело (1). Задание 3: называет случаи а и г (1); объясняет через проводники и диэлектрики (1).</div>
+</section>
+
+<!-- 11 ЭТАП 3 -->
+<section class="slide" data-title="10 Этап 3">
+  <p class="eyebrow">Практика · этап 3 · анализ и оценка <span class="pts">2 балла</span></p>
+  <h2>Пыль и щётка</h2>
+  <p class="lead">Почему пыль прилипает к одежде при чистке её <b>сухой</b> щёткой и не прилипает, если щётка <b>влажная</b> (учебник 1, стр. 117, вопрос 1)? Приведи по одному примеру полезной и вредной электризации и предложи способ защиты от вредной.</p>
+  <textarea id="s3text" aria-label="Ответ к этапу 3" placeholder="Сухая щётка... Влажная щётка... Полезная... Вредная... Защита..."></textarea>
+  <div class="card" style="margin-top:.8rem"><h3>Дескрипторы</h3>
+    <label class="desc"><input type="checkbox" data-score="s3"><span>объясняет: сухая щётка электризуется и притягивает пыль, влажная проводит заряд, он стекает в землю — <b>1 балл</b></span></label>
+    <label class="desc"><input type="checkbox" data-score="s3"><span>приводит пример полезной и вредной электризации и способ защиты (заземление, увлажнение воздуха) — <b>1 балл</b></span></label></div>
+  <div class="grid g2" style="margin-top:.8rem">
+    <div class="card"><h3>Полезная электризация</h3><p>принтер, копирование, покраска краскопультом, электрофильтры</p></div>
+    <div class="card"><h3>Вредная электризация</h3><p>электризация одежды, ремней и лент транспортёров, волокон на ткацком производстве, молния</p></div>
+  </div>
+  <div class="answer"><b>Ответ.</b> Сухая щётка — диэлектрик, электризуется трением и притягивает пыль; влажная проводит заряд, он стекает в землю. Защита: заземление, увлажнение воздуха.</div>
+</section>
+
+<!-- 12 ИТОГИ -->
+<section class="slide" data-title="11 Итоги">
+  <p class="eyebrow">Конец урока · 5 минут</p>
+  <h1>Итоги урока</h1>
+  <div class="grid g2">
+    <div class="card"><h3>Мои баллы</h3><p class="big"><b id="scoreBig">0</b> из 10</p><table><tbody id="scoreTable"></tbody></table><p class="tag" id="grade" style="margin-top:.5rem"></p><p class="empty">Шкала: 9–10 отлично · 7–8 хорошо · 5–6 удовлетворительно · менее 5 нужна помощь.</p></div>
+    <div class="card"><h3>Вернёмся к целям</h3>
+      <label class="desc"><input type="checkbox" class="goal"><span>Объясню, чем проводники отличаются от диэлектриков</span></label>
+      <label class="desc"><input type="checkbox" class="goal"><span>Объясню электризацию трением и влиянием</span></label>
+      <label class="desc"><input type="checkbox" class="goal"><span>Приведу примеры полезной и вредной электризации</span></label>
+      <p class="feedback" id="goalMsg"></p>
+      <h3 style="margin-top:.8rem">Сигнал рукой</h3><p>Палец вверх — всё понял. Ладонь набок — есть вопросы. Кулак — нужна помощь.</p></div>
+  </div>
+  <div class="grid g2" style="margin-top:1rem">
+    <div class="card"><h3>Выходной билет</h3>
+      <p>1. Чем проводник отличается от диэлектрика?</p><textarea id="x1" aria-label="Ответ 1" style="min-height:3.2rem"></textarea>
+      <p>2. В каком порядке заряжают шарик влиянием?</p><textarea id="x2" aria-label="Ответ 2" style="min-height:3.2rem"></textarea>
+      <p>3. Пример вредной электризации и как защититься.</p><textarea id="x3" aria-label="Ответ 3" style="min-height:3.2rem"></textarea></div>
+    <div class="card"><h3>Домашнее задание</h3><ul><li>Учебник 1, §18, часть VI: контрольные вопросы 4–5 (стр. 118)</li><li>«Ответьте на вопросы» №1–2 (стр. 117)</li><li>Задания этапа 2, которые не успели выполнить</li><li>По желанию: экспериментальное задание (стр. 119) с воздушным шариком и газетой</li></ul><p class="tag">Следующий урок: закон сохранения электрического заряда</p></div>
+  </div>
+  <div class="row" style="margin-top:1rem"><button class="btn" id="resetAll">Сбросить все ответы</button><button class="btn primary" onclick="window.print()">Печать</button></div>
+</section>
+</main>
+
+<div class="bar">
+  <button class="btn" id="prev">← Назад</button>
+  <span class="hint">Стрелки <span class="kbd">←</span> <span class="kbd">→</span> · <span class="kbd">T</span> ответы учителя · <span class="kbd">F</span> весь экран</span>
+  <button class="btn primary" id="next">Далее →</button>
+</div>
+
+<script src="js/util.js"></script>
+<script src="js/electroscope.js"></script>
+<script src="js/labs.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

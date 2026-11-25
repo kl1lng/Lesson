@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhysLab · Учитель</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23b45309' d='M13.5 2 5 13.5h5.5L9.5 22 19 9.5h-5.7z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.wrap{max-width:1240px;margin:0 auto;padding:1rem 1rem 3rem}
+.login{max-width:420px;margin:12vh auto 0}
+.login input{width:100%;font:inherit;padding:.7rem .8rem;border:2px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);margin:.3rem 0 .8rem}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin:.8rem 0}
+@media (max-width:800px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:.6rem .9rem}
+.kpi b{display:block;font-size:1.7rem;font-variant-numeric:tabular-nums}.kpi span{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);font-weight:700}
+.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1rem;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:1fr}}
+tr.row-click{cursor:pointer}tr.row-click:hover{background:var(--surface-2)}tr.row-click.on{background:var(--primary-soft)}
+.mini{display:inline-block;min-width:1.7rem;text-align:center;border-radius:8px;padding:.05rem .35rem;font-weight:700;font-size:.85rem}
+.mini.g{background:var(--ok-soft);color:var(--ok)}.mini.y{background:var(--brass-soft);color:var(--brass)}.mini.r{background:var(--bad-soft);color:var(--bad)}.mini.n{background:var(--surface-3);color:var(--ink-2)}
+.ans{white-space:pre-wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:.55rem .75rem;margin:.3rem 0 .6rem;min-height:2.2rem}
+.hint{font-size:.8rem;color:var(--ink-2)}
+.graded{display:flex;gap:.6rem;align-items:flex-start;padding:.3rem 0}
+.graded input{width:1.3rem;height:1.3rem;accent-color:var(--primary);margin-top:.15rem}
+.live{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:var(--ok);margin-right:.35rem;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.bar2{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.sel{font:inherit;padding:.5rem .7rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink)}
+.linkbox{flex:1;min-width:240px;font:inherit;padding:.6rem .8rem;border:2px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink)}
+.code{font-family:var(--mono);font-weight:800;font-size:1.8rem;letter-spacing:.2em;background:var(--brass-soft);color:var(--brass);border:2px solid var(--brass);border-radius:12px;padding:.1rem .8rem}
+.statuspill{font-weight:700;border-radius:999px;padding:.2rem .8rem;background:var(--surface-3)}
+.statuspill.running{background:var(--ok-soft);color:var(--ok)}.statuspill.finished{background:var(--bad-soft);color:var(--bad)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--primary)"/><path fill="#ffd36b" d="M18 5 8 18h6l-1 9 10-13h-6z"/></svg><div>PhysLab · Учитель<small>Проводники и диэлектрики</small></div></div>
+  <div style="flex:1"></div>
+  <span class="tag" id="live" hidden><i class="live"></i>обновляется каждые 4 с</span>
+  <button class="btn" id="csv" hidden>Скачать таблицу CSV</button>
+  
+  <button class="ibtn" id="tTheme" aria-label="Тёмная или светлая тема"><svg viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button>
+</header>
+
+<main class="wrap">
+  <div class="card login" id="login">
+    <h1>Вход для учителя</h1>
+    <p class="lead" style="font-size:1rem">Ключ показан в окне сервера при запуске (и лежит в <code>data/teacher.key</code>).</p>
+    <label for="key">Ключ учителя</label>
+    <input id="key" type="password" autocomplete="current-password">
+    <button class="btn primary" id="enter" style="width:100%;padding:.8rem">Войти</button>
+    <p class="feedback bad" id="loginMsg"></p>
+  </div>
+
+  <div id="app" hidden>
+    <div class="card" id="sessCard" style="margin-bottom:1rem">
+      <div class="bar2">
+        <h3 style="margin:0">Сессия</h3>
+        <select id="newCls" aria-label="Класс" class="sel"><option>8 Б</option><option>8 В</option><option>8 А</option><option>8 Г</option></select>
+        <button class="btn primary" id="newSess">Создать новую сессию</button>
+        <select id="oldSess" aria-label="Прошлые сессии" class="sel"><option value="">Прошлые сессии…</option></select>
+      </div>
+      <div id="sessBox" hidden>
+        <p class="tag" style="margin:.9rem 0 .3rem">Ссылка для учеников (скопируйте и сократите в любом сервисе коротких ссылок)</p>
+        <div class="bar2"><input id="link" class="linkbox" readonly aria-label="Ссылка для учеников"><button class="btn" id="copy">Копировать</button></div>
+        <div class="bar2" style="margin-top:.8rem">
+          <span class="code" id="codeBig"></span><span class="statuspill" id="stat"></span>
+          <button class="btn primary" id="start">Начать</button>
+          <button class="btn" id="finish">Завершить и показать итоги</button>
+          <button class="btn" id="board">Открыть экран для доски ↗</button>
+          <button class="btn" id="delSess">Удалить сессию</button>
+        </div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span>Учеников</span><b id="kN">0</b></div>
+      <div class="kpi"><span>Средний балл</span><b id="kAvg">0</b></div>
+      <div class="kpi"><span>Закончили задания</span><b id="kDone">0</b></div>
+      <div class="kpi"><span>Ждут оценки</span><b id="kWait">0</b></div>
+    </div>
+    <div class="layout">
+      <div class="card">
+        <h3>Класс</h3>
+        <table><thead><tr><th>Ученик</th><th title="Задание 1">З1</th><th title="Задание 2">З2</th><th title="Выбор в задании 3">З3</th><th>Авто</th><th>Учитель</th><th>Итого / 10</th></tr></thead><tbody id="rows"><tr><td colspan="7" class="empty">Пока никто не вошёл</td></tr></tbody></table>
+        <p class="hint">Авто: порядок шагов (до 4) и выбор в задании 3 (1), максимум 5. Учитель: этап 1 (2), объяснение к заданию 3 (1), этап 3 (2).</p>
+      </div>
+      <div class="card" id="detail"><h3>Выберите ученика в таблице</h3><p class="empty">Здесь появятся его ответы и критерии для оценки.</p></div>
+    </div>
+  </div>
+</main>
+
+<script src="js/teacher.js"></script>
+</body>
+</html>

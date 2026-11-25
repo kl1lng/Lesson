@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhysLab · Ученик</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23b45309' d='M13.5 2 5 13.5h5.5L9.5 22 19 9.5h-5.7z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.wrap{max-width:900px;margin:0 auto;padding:1rem 1rem 5rem}
+.sec{margin:1.2rem 0}
+.sec>h2{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.status{font-size:.8rem;font-weight:650;color:var(--ink-2)}
+.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
+.banner{position:sticky;top:3.6rem;z-index:20;background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad);border-radius:12px;padding:.5rem .9rem;margin:.6rem 0;font-weight:650}
+.login{max-width:460px;margin:12vh auto 0}
+.login input,.login select{width:100%;font:inherit;padding:.7rem .8rem;border:2px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);margin:.3rem 0 .8rem}
+.progress{height:8px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--primary);width:0;transition:width .5s var(--ease)}
+details.card summary{cursor:pointer;font-weight:650;font-size:1.1rem}
+#app[data-state="lobby"] .sec,#app[data-state="lobby"] .progress{display:none}
+#app[data-state="running"] #wait,#app[data-state="running"] #done,#app[data-state="finished"] #wait{display:none}
+#app[data-state="finished"] .sec:not(details){display:none}
+#app[data-state="lobby"] #done{display:none}
+.wait h1,#done h1{margin-bottom:.4rem}
+.rank{font-size:3rem;font-weight:800;color:var(--brass)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--primary)"/><path fill="#ffd36b" d="M18 5 8 18h6l-1 9 10-13h-6z"/></svg><div>PhysLab<small id="who">Проводники и диэлектрики</small></div></div>
+  <div style="flex:1"></div>
+  <span class="status" id="save"></span>
+  <span class="score-pill" id="pill" title="Твои баллы за урок (максимум 10) и место в классе">0 / 10</span>
+  <button class="ibtn" id="tTheme" aria-label="Тёмная или светлая тема"><svg viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button>
+</header>
+
+<main class="wrap" id="main">
+  <div class="card login" id="login">
+    <h1>Войти в урок</h1>
+    <p class="lead" style="font-size:1rem" id="sessInfo">Проверяю ссылку…</p>
+    <label for="nm">Фамилия и имя</label>
+    <input id="nm" autocomplete="name" placeholder="Например, Иванов Айдар" maxlength="40">
+    <button class="btn primary" id="go" style="width:100%;padding:.8rem">Начать</button>
+    <p class="feedback bad" id="loginMsg"></p>
+  </div>
+
+  <div id="app" hidden data-state="lobby">
+    <div class="card wait" id="wait"><h1>Ты в игре!</h1><p class="lead">Ждём, когда учитель нажмёт «Начать». Пока можешь поиграть с виртуальными лабораториями ниже.</p><p class="big" id="waitCount"></p></div>
+    <div class="card" id="done"><h1 id="doneTitle">Урок завершён</h1><p class="big" id="doneText"></p><p class="empty">Ответы на открытые вопросы учитель проверит позже, итоговое место может измениться.</p></div>
+    <div class="progress" aria-label="Прогресс"><i id="bar"></i></div>
+    <div class="banner" id="offline" hidden>Нет связи с сервером: ответы пока не сохранены. Проверь Wi-Fi.</div>
+
+    <section class="sec card" id="sCheck">
+      <h2>1. Проверка понимания <span class="status" id="stCheck"></span></h2>
+      <p class="big">Что произойдёт с заряженным электроскопом, если коснуться его шарика стеклянной палочкой?</p>
+      <div id="check1"></div><p class="feedback" id="check1Msg"></p>
+    </section>
+
+    <section class="sec card" id="sS1">
+      <h2>2. Этап 1 <span class="pts">2 балла</span> <span class="status" id="stS1"></span></h2>
+      <p class="big">Объясни, чем проводники отличаются от диэлектриков. Приведи по три примера каждых.</p>
+      <textarea id="s1" aria-label="Ответ к этапу 1" placeholder="Проводники... Диэлектрики... Примеры: ..."></textarea>
+      <p class="tag" style="margin-top:.4rem">Проверь себя: есть ли в ответе слова про свободные заряды и по три примера каждых?</p>
+    </section>
+
+    <section class="sec card" id="sS2">
+      <h2>3. Этап 2 <span class="pts">6 баллов</span></h2>
+      <div class="tabs" id="s2tabs"><button class="on" data-t="t1">Задание 1</button><button data-t="t2">Задание 2</button><button data-t="t3">Задание 3</button></div>
+      <div class="tpane" id="t1">
+        <h3>Задание 1 (учебник 1, упр. 12, №1)</h3>
+        <p>Как с помощью отрицательно заряженного металлического шарика зарядить положительно другой шарик, не изменяя заряда первого? Выбери нужные шаги по порядку.</p>
+        <div class="split"><div><p class="tag">Шаги на выбор</p><div class="pool" id="o1pool"></div></div><div><p class="tag">Твой порядок</p><ol class="order" id="o1list"></ol><p class="empty" id="o1empty">Нажимай шаги по порядку.</p></div></div>
+        <div class="row"><button class="btn primary" id="o1check">Проверить</button><button class="btn" id="o1undo">Убрать последний</button><button class="btn" id="o1reset">Сбросить</button></div>
+        <p class="feedback" id="o1msg" aria-live="polite"></p>
+      </div>
+      <div class="tpane" id="t2" hidden>
+        <h3>Задание 2 (учебник 1, упр. 12, №2)</h3>
+        <p>Как с помощью отрицательно заряженного металлического шарика зарядить два одинаковых шарика равными, но противоположными по знаку зарядами?</p>
+        <div class="split"><div><p class="tag">Шаги на выбор</p><div class="pool" id="o2pool"></div></div><div><p class="tag">Твой порядок</p><ol class="order" id="o2list"></ol><p class="empty" id="o2empty">Нажимай шаги по порядку.</p></div></div>
+        <div class="row"><button class="btn primary" id="o2check">Проверить</button><button class="btn" id="o2undo">Убрать последний</button><button class="btn" id="o2reset">Сбросить</button></div>
+        <p class="feedback" id="o2msg" aria-live="polite"></p>
+      </div>
+      <div class="tpane" id="t3" hidden>
+        <h3>Задание 3</h3>
+        <p>Электроскоп заряжен. К шарику прикасаются по очереди предметами. В каких случаях листочки опадут? Отметь и объясни.</p>
+        <div id="q3"></div><div class="row"><button class="btn primary" id="q3check">Проверить выбор</button></div><p class="feedback" id="q3msg" aria-live="polite"></p>
+        <p>Объясни свой выбор (почему именно эти предметы):</p>
+        <textarea id="q3exp" aria-label="Объяснение к заданию 3" style="min-height:4.5rem"></textarea>
+        <span class="status" id="stQ3exp"></span>
+      </div>
+    </section>
+
+    <section class="sec card" id="sS3">
+      <h2>4. Этап 3 <span class="pts">2 балла</span> <span class="status" id="stS3"></span></h2>
+      <p class="big">Почему пыль прилипает к одежде при чистке её <b>сухой</b> щёткой и не прилипает, если щётка <b>влажная</b>? Приведи по одному примеру полезной и вредной электризации и предложи способ защиты от вредной.</p>
+      <textarea id="s3" aria-label="Ответ к этапу 3" placeholder="Сухая щётка... Влажная щётка... Полезная... Вредная... Защита..."></textarea>
+    </section>
+
+    <section class="sec card" id="sX">
+      <h2>5. Выходной билет <span class="status" id="stX"></span></h2>
+      <p>1. Чем проводник отличается от диэлектрика?</p><textarea id="x1" aria-label="Ответ 1" style="min-height:3.2rem"></textarea>
+      <p>2. В каком порядке заряжают шарик влиянием?</p><textarea id="x2" aria-label="Ответ 2" style="min-height:3.2rem"></textarea>
+      <p>3. Пример вредной электризации и как защититься.</p><textarea id="x3" aria-label="Ответ 3" style="min-height:3.2rem"></textarea>
+      <h3 style="margin-top:.8rem">Мои цели</h3>
+      <label class="desc"><input type="checkbox" class="goal"><span>Объясню, чем проводники отличаются от диэлектриков</span></label>
+      <label class="desc"><input type="checkbox" class="goal"><span>Объясню электризацию трением и влиянием</span></label>
+      <label class="desc"><input type="checkbox" class="goal"><span>Приведу примеры полезной и вредной электризации</span></label>
+    </section>
+
+    <details class="sec card">
+      <summary>Виртуальные лаборатории (можно пользоваться при выполнении заданий)</summary>
+      <h3 style="margin-top:.8rem">Электроскоп</h3>
+      <div class="lab">
+        <div class="lab-head"><div class="seg" id="rodSeg" role="group"><button aria-pressed="false" data-r="glass">Стекло + шёлк</button><button aria-pressed="true" data-r="ebonite">Эбонит + мех</button></div><button class="btn primary" id="rubBtn">Потереть</button></div>
+        <div id="e2"></div>
+        <div class="row" style="margin-top:.6rem"><button class="btn" id="e2Remove">Убрать палочку</button><button class="btn" id="e2Zero">Разрядить</button></div>
+        <div id="e2ToolsHost"></div>
+        <p class="big" id="e2Narr" aria-live="polite"></p>
+      </div>
+      <h3 style="margin-top:1rem">Цепь с лампочкой</h3>
+      <div class="lab"><div id="lamp"></div><div class="pool" id="matPool" style="margin-top:.6rem"></div><p class="feedback" id="lampMsg"></p></div>
+    </details>
+  </div>
+</main>
+
+<script src="js/util.js"></script>
+<script src="js/electroscope.js"></script>
+<script src="js/labs.js"></script>
+<script src="js/student.js"></script>
+</body>
+</html>

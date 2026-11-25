@@ -1,0 +1,38 @@
+/* Токены PhysLab. Палитра brand/accent сгенерирована скриптом web-craft (design-system/palette.css).
+   Цвета в компонентах — только через эти переменные. Вторая тема — data-theme="dark". */
+:root{
+  /* шкала brand (электрический синий) и accent (латунь) */
+  --brand-50:239 246 255;--brand-100:219 230 255;--brand-200:191 211 254;--brand-300:147 179 253;--brand-400:96 130 246;
+  --brand-500:59 100 238;--brand-600:29 78 216;--brand-700:30 64 175;--brand-800:30 55 140;--brand-900:23 37 84;
+  --accent-100:253 236 200;--accent-200:247 216 192;--accent-300:249 186 138;--accent-400:245 136 53;--accent-500:218 100 11;
+  --accent-600:180 83 9;--accent-700:136 63 7;--accent-800:97 45 5;
+
+  /* семантика (светлая тема) */
+  --bg:#f5f3ec; --bg-grid:rgba(20,33,61,.045);
+  --surface:#ffffff; --surface-2:#eef1f8; --surface-3:#e4e9f4;
+  --ink:#14213d; --ink-2:#44506b; --line:#d3dae8;
+  --primary:rgb(var(--brand-600)); --primary-ink:#fff; --primary-soft:rgb(var(--brand-100));
+  --brass:rgb(var(--accent-600)); --brass-soft:rgb(var(--accent-100));
+  --pos:#c2410c; --pos-soft:#ffe3d3;   /* положительный заряд */
+  --neg:#1e40af; --neg-soft:#dbe6ff;   /* отрицательный заряд */
+  --ok:#15803d; --ok-soft:#dcf5e5; --bad:#b91c1c; --bad-soft:#fde0e0;
+  --glass:rgba(150,190,230,.22); --glass-line:#7c93b5;
+
+  /* форма, тени, движение */
+  --r-sm:10px; --r:16px; --r-lg:24px;
+  --shadow:0 1px 2px rgba(20,33,61,.08),0 8px 24px rgba(20,33,61,.08);
+  --ease:cubic-bezier(.2,.8,.2,1); --t-fast:.15s; --t:.3s; --t-slow:.6s;
+  --font:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:"Cascadia Code",Consolas,ui-monospace,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#0d1322; --bg-grid:rgba(255,255,255,.04);
+  --surface:#161f35; --surface-2:#1e2a47; --surface-3:#26345a;
+  --ink:#eef2fb; --ink-2:#b2bdd4; --line:#2e3d62;
+  --primary:#7ea4ff; --primary-ink:#0d1322; --primary-soft:#243762;
+  --brass:#f4b860; --brass-soft:#3b2d12;
+  --pos:#ff9b6b; --pos-soft:#4a2616; --neg:#8fb0ff; --neg-soft:#1f2f5c;
+  --ok:#5ed38a; --ok-soft:#133323; --bad:#ff8a8a; --bad-soft:#3b1717;
+  --glass:rgba(120,170,230,.16); --glass-line:#5f7aa3;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.4);
+}

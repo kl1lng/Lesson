@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhysLab · Экран для доски</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23b45309' d='M13.5 2 5 13.5h5.5L9.5 22 19 9.5h-5.7z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<style>
+body{overflow-x:hidden;background-image:radial-gradient(60% 50% at 50% 0%,rgb(var(--brand-700)/.35),transparent 70%),linear-gradient(var(--bg-grid) 1px,transparent 1px),linear-gradient(90deg,var(--bg-grid) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px}
+.stage{min-height:100vh;display:flex;flex-direction:column;padding:1.2rem 2rem 2rem;max-width:1500px;margin:0 auto}
+.head{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.head h1{font-size:clamp(1.4rem,3vw,2.4rem);margin:0}
+.head small{color:var(--ink-2);font-size:1rem}
+.sp{flex:1}
+.hostbtn{font-size:1.05rem}
+.view{display:none;flex:1;animation:enter .5s var(--ease)}
+body[data-state="lobby"] #vLobby,body[data-state="running"] #vRun,body[data-state="finished"] #vEnd{display:block}
+/* ЛОББИ */
+.joinwrap{display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap;margin:2vh auto 1rem;max-width:1300px}
+.qrbox{background:#fff;border-radius:22px;padding:.8rem .8rem .5rem;box-shadow:var(--shadow);text-align:center;animation:pop .6s var(--ease) both}
+.qrbox svg{display:block;width:clamp(200px,24vw,340px);height:auto}
+.qrcap{color:#14213d;font-weight:700;font-size:1.05rem;padding:.2rem 0 .1rem}
+.joinbox{text-align:center;margin:0;max-width:900px;flex:1;min-width:300px}
+.joinbox .lbl{font-size:clamp(1.1rem,2vw,1.6rem);color:var(--ink-2)}
+.joinbox .url{font-family:var(--mono);font-size:clamp(1.2rem,3.4vw,3rem);font-weight:700;word-break:break-all;background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:.6rem 1.2rem;margin:.6rem 0;display:inline-block;max-width:100%}
+.joinbox .codeline{font-size:clamp(1.1rem,2vw,1.6rem);color:var(--ink-2)}
+.joinbox .code{font-family:var(--mono);font-weight:800;font-size:clamp(2.5rem,8vw,6.5rem);letter-spacing:.25em;color:var(--brass);line-height:1.1}
+.count{text-align:center;font-size:1.6rem;font-weight:700;margin:.6rem 0 1rem}
+.names{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center}
+.nm{background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:.5rem 1.2rem;font-size:1.35rem;font-weight:650;animation:pop .5s var(--ease) both}
+@keyframes pop{from{transform:scale(.3);opacity:0}60%{transform:scale(1.12)}to{transform:none;opacity:1}}
+/* ТАБЛИЦА */
+.lb{position:relative;margin-top:1rem}
+.rowx{position:absolute;left:0;right:0;height:74px;display:grid;grid-template-columns:70px minmax(0,1.2fr) minmax(0,1.5fr) 130px;gap:1rem;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:0 1.2rem;transition:transform .7s var(--ease),border-color .3s,background .3s;will-change:transform}
+.rowx .rk{font-size:1.9rem;font-weight:800;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.rowx .nmx{font-size:1.5rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rowx .pts::after{content:" / 10";font-size:1rem;color:var(--ink-2);font-weight:600}
+.rowx .pts{font-size:1.9rem;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;color:var(--brass)}
+.rowx .pbar{height:16px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.rowx .pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),#7ad0ff);border-radius:99px;transition:width .8s var(--ease)}
+.rowx.r1{border-color:#f4c542;background:linear-gradient(90deg,rgba(244,197,66,.18),var(--surface))}.rowx.r1 .rk{color:#f4c542}
+.rowx.r2{border-color:#c4cbd8}.rowx.r2 .rk{color:#c4cbd8}
+.rowx.r3{border-color:#d9935a}.rowx.r3 .rk{color:#d9935a}
+.rowx.up{animation:flash 1s}
+@keyframes flash{30%{background:var(--ok-soft)}}
+.progress-note{color:var(--ink-2);margin:.4rem 0 0}
+/* ПЬЕДЕСТАЛ */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:1.4rem;margin:2.5vh auto 1.5rem;max-width:1000px;height:46vh;min-height:300px}
+.pcol{flex:1;max-width:300px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.pname{font-size:clamp(1.2rem,2.4vw,2.2rem);font-weight:800;text-align:center;margin-bottom:.4rem;opacity:0}
+.ppts{font-size:1.3rem;color:var(--brass);font-weight:800;margin-bottom:.4rem;opacity:0}
+.pbase{width:100%;border-radius:18px 18px 0 0;display:grid;place-items:start center;padding-top:.6rem;font-size:3.2rem;font-weight:900;color:#14213d;transform-origin:bottom;transform:scaleY(0)}
+.pcol.p1 .pbase{height:100%;background:linear-gradient(#ffe08a,#f4b400)}
+.pcol.p2 .pbase{height:72%;background:linear-gradient(#eef1f7,#aab4c6)}
+.pcol.p3 .pbase{height:52%;background:linear-gradient(#f3c29c,#c97f46)}
+.show .pbase{animation:grow .9s var(--ease) forwards}.show .pname,.show .ppts{animation:fadeup .6s var(--ease) forwards}
+.pcol.p3 .pbase{animation-delay:.2s}.pcol.p3 .pname,.pcol.p3 .ppts{animation-delay:1s}
+.pcol.p2 .pbase{animation-delay:1.3s}.pcol.p2 .pname,.pcol.p2 .ppts{animation-delay:2.1s}
+.pcol.p1 .pbase{animation-delay:2.4s}.pcol.p1 .pname,.pcol.p1 .ppts{animation-delay:3.2s}
+@keyframes grow{to{transform:scaleY(1)}}@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.restlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.5rem;max-width:1200px;margin:0 auto}
+.restlist div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.4rem .9rem;display:flex;justify-content:space-between;gap:.6rem;font-size:1.1rem}
+canvas#conf{position:fixed;inset:0;pointer-events:none;z-index:50}
+.empty{text-align:center;font-size:1.3rem;margin-top:3rem}
+@media (prefers-reduced-motion:reduce){.pbase{transform:none!important}.pname,.ppts{opacity:1!important}}
+</style>
+</head>
+<body data-state="lobby">
+<canvas id="conf" aria-hidden="true"></canvas>
+<div class="stage">
+  <div class="head">
+    <svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--primary)"/><path fill="#ffd36b" d="M18 5 8 18h6l-1 9 10-13h-6z"/></svg>
+    <div><h1 id="title">PhysLab</h1><small id="sub"></small></div>
+    <div class="sp"></div>
+    <button class="btn primary hostbtn" id="start" hidden>Начать урок</button>
+    <button class="btn hostbtn" id="finish" hidden>Завершить и показать итоги</button>
+    <button class="btn hostbtn" id="again" hidden>Вернуться к таблице</button>
+  </div>
+
+  <section class="view" id="vLobby">
+    <div class="joinwrap">
+    <div class="qrbox" id="qrbox" hidden><div id="qr"></div><div class="qrcap">Наведи камеру</div></div>
+    <div class="joinbox">
+      <div class="lbl">Заходи по ссылке и вводи своё имя</div>
+      <div class="url" id="url">…</div>
+      <div class="codeline">Код сессии</div>
+      <div class="code" id="code">—</div>
+    </div>
+    </div>
+    <div class="count" id="count">Ждём игроков…</div>
+    <div class="names" id="names" aria-live="polite"></div>
+  </section>
+
+  <section class="view" id="vRun">
+    <div class="count" id="runCount"></div>
+    <div class="lb" id="lb" aria-live="polite"></div>
+    <p class="progress-note">Баллы за урок по КСП: этап 1 — 2, этап 2 — 6 (три задания по 2), этап 3 — 2; максимум 10. Задания 1–2 и выбор в задании 3 проверяет система, остальное оценивает учитель по дескрипторам.</p>
+  </section>
+
+  <section class="view" id="vEnd">
+    <div class="podium" id="podium"></div>
+    <div class="restlist" id="rest"></div>
+  </section>
+  <div class="empty" id="err" hidden></div>
+</div>
+<script src="js/qr.js"></script>
+<script src="js/board.js"></script>
+</body>
+</html>

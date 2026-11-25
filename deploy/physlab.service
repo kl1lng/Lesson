@@ -1,0 +1,15 @@
+[Unit]
+Description=PhysLab (уроки физики)
+After=network.target
+
+[Service]
+User=www-data
+WorkingDirectory=/var/www/physlab
+Environment=PORT=8080
+Environment=HOST=127.0.0.1
+Environment=TEACHER_KEY=замените-на-свой-длинный-ключ
+ExecStart=/usr/bin/python3 /var/www/physlab/server/server.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
