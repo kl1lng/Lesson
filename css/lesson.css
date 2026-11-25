@@ -4,6 +4,7 @@ body.lesson{height:100vh;height:100dvh;overflow:hidden;display:flex;flex-directi
 body.lesson .top{position:relative;flex:none;padding:.35rem .9rem;gap:.5rem;box-shadow:none}
 body.lesson .bar{position:relative;flex:none;padding:.35rem .9rem}
 body.lesson main{flex:1;min-height:0;max-width:none;width:100%;margin:0;padding:.7rem 1.4rem .5rem;position:relative}
+body.lesson main.on-deck{padding:.3rem .6rem}
 body.lesson main::before{content:"";position:absolute;inset:0;background:url(../img/doodle.svg) center/cover no-repeat;pointer-events:none;z-index:0}
 body.lesson .slide{position:relative;z-index:1;height:100%;min-height:0}
 body.lesson .slide.active{display:flex;flex-direction:column;gap:.55rem}
@@ -62,3 +63,8 @@ textarea{min-height:0;flex:1}
 .mats .mat img{flex:1;min-height:0;aspect-ratio:auto;height:0}
 .panel>.mats{flex:1}
 .mat span{flex:none}
+/* слайды презентации NotebookLM: картинка на весь экран */
+body.lesson .slide.deck.active{display:flex;align-items:center;justify-content:center;padding:0}
+.slide.deck img{width:100%;height:100%;object-fit:contain;display:block;user-select:none}
+.steps button.deckbtn{background:var(--primary-soft);color:var(--title)}
+.steps button.deckbtn[aria-current="step"]{background:var(--primary);color:var(--primary-ink)}

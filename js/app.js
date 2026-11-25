@@ -6,12 +6,14 @@
   /* ---------- навигация ---------- */
   var slides = $$(".slide"), cur = 0, visited = {}, stepsEl = $("#steps");
   slides.forEach(function (s, i) {
-    var b = PL.el("button", { type: "button", text: s.dataset.title }, stepsEl);
+    var b = PL.el("button", { type: "button", text: (i + 1) + " " + s.dataset.title }, stepsEl);
+    if (s.classList.contains("deck")) b.classList.add("deckbtn");
     b.addEventListener("click", function () { go(i); });
   });
   function go(i) {
     cur = PL.clamp(i, 0, slides.length - 1); visited[cur] = 1;
     slides.forEach(function (s, k) { s.classList.toggle("active", k === cur); });
+    $("#main").classList.toggle("on-deck", slides[cur].classList.contains("deck"));
     $$("button", stepsEl).forEach(function (b, k) {
       if (k === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
       b.classList.toggle("done", !!visited[k] && k !== cur);
@@ -24,8 +26,13 @@
   $("#prev").addEventListener("click", function () { go(cur - 1); });
   $("#next").addEventListener("click", function () { go(cur + 1); });
   document.addEventListener("keydown", function (e) {
-    var t = e.target.tagName; if (t === "TEXTAREA" || t === "INPUT") return;
-    if (e.key === "ArrowRight") go(cur + 1); else if (e.key === "ArrowLeft") go(cur - 1);
+    var t = e.target.tagName; if (t === "TEXTAREA" || t === "INPUT" || t === "SELECT") return;
+    /* презентер (кликер): обычно шлёт PageDown / PageUp, иногда стрелки, пробел или Enter */
+    var btn = (t === "BUTTON" || t === "A");
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === "ArrowDown" || ((e.key === " " || e.key === "Enter") && !btn)) { e.preventDefault(); go(cur + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp" || e.key === "ArrowUp" || e.key === "Backspace") { e.preventDefault(); go(cur - 1); }
+    else if (e.key === "Home") { e.preventDefault(); go(0); }
+    else if (e.key === "End") { e.preventDefault(); go(slides.length - 1); }
     else if ("tTеЕ".indexOf(e.key) > -1 && e.key.length === 1) toggleTeacher();
     else if ("fFаА".indexOf(e.key) > -1 && e.key.length === 1) toggleFull();
   });
