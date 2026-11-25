@@ -23,24 +23,28 @@
     if (slides[cur].dataset.title.indexOf("Итоги") > -1) renderScore();
     try { history.replaceState(null, "", "#" + (cur + 1)); } catch (e) {}
   }
-  $("#prev").addEventListener("click", function () { go(cur - 1); });
-  $("#next").addEventListener("click", function () { go(cur + 1); });
+  /* «вперёд»: сначала открыть скрытые дескрипторы на слайде, потом следующий слайд; «назад» — наоборот */
+  function next() { var f = slides[cur].querySelector(".frag:not(.shown)"); if (f) { f.classList.add("shown"); return; } go(cur + 1); }
+  function prev() { var s = slides[cur].querySelectorAll(".frag.shown"); if (s.length) { s[s.length - 1].classList.remove("shown"); return; } go(cur - 1); }
+  $("#prev").addEventListener("click", prev);
+  $("#next").addEventListener("click", next);
   document.addEventListener("keydown", function (e) {
     var t = e.target.tagName; if (t === "TEXTAREA" || t === "INPUT" || t === "SELECT") return;
     /* презентер (кликер): обычно шлёт PageDown / PageUp, иногда стрелки, пробел или Enter */
     var btn = (t === "BUTTON" || t === "A");
-    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === "ArrowDown" || ((e.key === " " || e.key === "Enter") && !btn)) { e.preventDefault(); go(cur + 1); }
-    else if (e.key === "ArrowLeft" || e.key === "PageUp" || e.key === "ArrowUp" || e.key === "Backspace") { e.preventDefault(); go(cur - 1); }
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === "ArrowDown" || ((e.key === " " || e.key === "Enter") && !btn)) { e.preventDefault(); next(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp" || e.key === "ArrowUp" || e.key === "Backspace") { e.preventDefault(); prev(); }
     else if (e.key === "Home") { e.preventDefault(); go(0); }
     else if (e.key === "End") { e.preventDefault(); go(slides.length - 1); }
     else if ("tTеЕ".indexOf(e.key) > -1 && e.key.length === 1) toggleTeacher();
     else if ("fFаА".indexOf(e.key) > -1 && e.key.length === 1) toggleFull();
+    else if ("mMьЬ".indexOf(e.key) > -1 && e.key.length === 1) document.body.classList.toggle("chrome");
   });
   function toggleTeacher() { var on = document.body.classList.toggle("teacher"); $("#tTeacher").setAttribute("aria-pressed", on); }
   function toggleFull() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); } else { document.exitFullscreen && document.exitFullscreen(); } }
   $("#tTeacher").addEventListener("click", toggleTeacher); $("#tFull").addEventListener("click", toggleFull);
   /* ссылка на результаты: последняя сессия учителя, если есть; иначе панель учителя */
-  try { var lastCode = localStorage.getItem("physlab-code"); if (lastCode) { $("#toBoard").href = "board.html?c=" + lastCode; } } catch (e) {}
+  try { var lastCode = localStorage.getItem("physlab-code"); if (lastCode) { $$("#toBoard, .toBoardLink").forEach(function (a) { a.href = "board.html?c=" + lastCode; }); } } catch (e) {}
   $("#tSound").addEventListener("click", function () { PL.sound.on = !PL.sound.on; this.setAttribute("aria-pressed", PL.sound.on); PL.pop(2); });
 
   /* ---------- таймер 10 + 30 + 5 ---------- */
@@ -189,7 +193,7 @@
 
   /* ---------- баллы ---------- */
   $$("input[data-score]").forEach(function (c, i) { c.dataset.k = "d" + i; if (store.get(c.dataset.k)) c.checked = true; c.addEventListener("change", function () { store.set(c.dataset.k, c.checked ? 1 : 0); updateScore(); }); });
-  ["s1text", "s3text", "x1", "x2", "x3"].forEach(function (id) { var t = $("#" + id); var v = store.get(id); if (v) t.value = v; t.addEventListener("input", function () { store.set(id, t.value); }); });
+  ["s1text", "s3text", "x1", "x2", "x3"].forEach(function (id) { var t = $("#" + id); if (!t) return; var v = store.get(id); if (v) t.value = v; t.addEventListener("input", function () { store.set(id, t.value); }); });
   function sums() {
     var s1 = 0, s3 = 0, s2c = 0;
     $$("input[data-score]").forEach(function (c) { if (c.checked) { if (c.dataset.score === "s1") s1++; else if (c.dataset.score === "s3") s3++; else s2c++; } });
@@ -198,12 +202,13 @@
   }
   function updateScore() { var r = sums(); $("#scorePill").textContent = (r.s1 + r.s2 + r.s3) + " / 10"; }
   function renderScore() {
+    if (!$("#scoreBig")) return;
     var r = sums(), t = r.s1 + r.s2 + r.s3; $("#scoreBig").textContent = t;
     $("#scoreTable").innerHTML = "<tr><td>Этап 1</td><td><b>" + r.s1 + "</b> из 2</td></tr><tr><td>Этап 2</td><td><b>" + r.s2 + "</b> из 6</td></tr><tr><td>Этап 3</td><td><b>" + r.s3 + "</b> из 2</td></tr>";
     $("#grade").textContent = t >= 9 ? "Отлично" : t >= 7 ? "Хорошо" : t >= 5 ? "Удовлетворительно" : "Нужна помощь учителя";
   }
   $$(".goal").forEach(function (c, i) { if (store.get("g" + i)) c.checked = true; c.addEventListener("change", function () { store.set("g" + i, c.checked ? 1 : 0); var n = $$(".goal").filter(function (x) { return x.checked; }).length; $("#goalMsg").textContent = n === 3 ? "Все цели достигнуты!" : n + " из 3 целей достигнуто. Что осталось непонятным — напиши в выходном билете."; }); });
-  $("#resetAll").addEventListener("click", function () { if (confirm("Сбросить все ответы?")) { store.clear(); location.reload(); } });
+  if ($("#resetAll")) $("#resetAll").addEventListener("click", function () { if (confirm("Сбросить все ответы?")) { store.clear(); location.reload(); } });
   updateScore();
   var h = parseInt((location.hash || "").slice(1), 10);
   go(h > 0 && h <= slides.length ? h - 1 : 0);

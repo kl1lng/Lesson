@@ -68,3 +68,21 @@ body.lesson .slide.deck.active{display:flex;align-items:center;justify-content:c
 .slide.deck img{width:100%;height:100%;object-fit:contain;display:block;user-select:none}
 .steps button.deckbtn{background:var(--primary-soft);color:var(--title)}
 .steps button.deckbtn[aria-current="step"]{background:var(--primary);color:var(--primary-ink)}
+
+/* чистый экран для доски: панели скрыты, остаётся только «Результаты класса» (клавиша M — показать панели) */
+body.lesson:not(.chrome) .bar{display:none}
+body.lesson:not(.chrome) .top{position:fixed;top:.5rem;right:.6rem;left:auto;padding:0;background:transparent;border:0;box-shadow:none;backdrop-filter:none;z-index:40}
+body.lesson:not(.chrome) .top>*:not(.tools){display:none}
+body.lesson:not(.chrome) .top .tools>*:not(#toBoard){display:none}
+body.lesson:not(.chrome) #toBoard{opacity:.85;box-shadow:var(--shadow)}
+body.lesson:not(.chrome) #toBoard:hover{opacity:1}
+body.lesson:not(.chrome) main{padding-top:.8rem}
+body.lesson:not(.chrome) .slide:not(.deck) .kick{padding-right:12rem}
+/* дескрипторы появляются по кнопке «вперёд» */
+.frag{opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .4s var(--ease),transform .4s var(--ease),visibility .4s}
+.frag.shown{opacity:1;visibility:visible;transform:none}
+.fraghint{color:var(--ink-2);font-style:italic;font-size:.95rem}
+.panel:has(.frag.shown) .fraghint{display:none}
+/* на доске галочки дескрипторов не нужны (баллы ставит учитель у себя) */
+body.lesson input[data-score]{display:none}
+body.lesson .desc:has(input[data-score]) span::before{content:"• ";color:var(--primary);font-weight:800}

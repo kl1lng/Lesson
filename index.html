@@ -221,10 +221,10 @@
   <div class="cols grow" style="grid-template-columns:1.4fr 1fr">
     <textarea id="s1text" aria-label="Ответ к этапу 1" placeholder="Проводники... Диэлектрики... Примеры: ..."></textarea>
     <div class="panel">
-      <h3>Дескрипторы</h3>
+      <h3>Дескрипторы</h3><p class="fraghint">Дескрипторы откроются, когда задание будет выполнено (кнопка «вперёд» на кликере).</p><div class="frag">
       <label class="desc"><input type="checkbox" data-score="s1"><span>объясняет: в проводниках есть свободные подвижные заряды, в диэлектриках их нет — <b>1 балл</b></span></label>
       <label class="desc"><input type="checkbox" data-score="s1"><span>называет не менее трёх проводников и трёх диэлектриков — <b>1 балл</b></span></label>
-    </div>
+    </div></div>
   </div>
   <div class="answer"><b>Ответ.</b> В проводниках есть свободные заряды, в диэлектриках нет. Проводники: металлы, растворы солей и кислот, почва, тело человека. Диэлектрики: стекло, эбонит, пластмасса, резина, шёлк, воздух.</div>
 </section>
@@ -261,8 +261,8 @@
   <p class="sub">Электроскоп заряжен. К шарику прикасаются по очереди. Отметь и объясни.</p>
   <div class="cols grow" style="grid-template-columns:1.1fr 1fr">
     <div class="panel"><div id="q3"></div><div class="row"><button class="btn primary" id="q3check">Проверить</button></div><p class="feedback" id="q3msg" aria-live="polite"></p></div>
-    <div class="panel"><h3>Дескрипторы</h3><p>называет случаи а и г — <b>1 балл</b> (проверяет система)</p>
-      <label class="desc"><input type="checkbox" data-score="s2c"><span>объясняет: медь и тело человека — проводники, стекло и пластмасса — диэлектрики — <b>1 балл</b> (проверяет сосед)</span></label></div>
+    <div class="panel"><h3>Дескрипторы</h3><p class="fraghint">Дескрипторы откроются, когда задание будет выполнено (кнопка «вперёд» на кликере).</p><div class="frag"><p>называет случаи а и г — <b>1 балл</b> (проверяет система)</p>
+      <label class="desc"><input type="checkbox" data-score="s2c"><span>объясняет: медь и тело человека — проводники, стекло и пластмасса — диэлектрики — <b>1 балл</b> (проверяет сосед)</span></label></div></div>
   </div>
   <div class="answer"><b>Ответ.</b> а) опадут; б) нет; в) нет; г) опадут.</div>
 </section>
@@ -274,11 +274,11 @@
   <div class="cols grow" style="grid-template-columns:1.4fr 1fr">
     <textarea id="s3text" aria-label="Ответ к этапу 3" placeholder="Сухая щётка... Влажная щётка... Полезная... Вредная... Защита..."></textarea>
     <div class="panel">
-      <h3>Дескрипторы</h3>
+      <h3>Дескрипторы</h3><p class="fraghint">Дескрипторы откроются, когда задание будет выполнено (кнопка «вперёд» на кликере).</p><div class="frag">
       <label class="desc"><input type="checkbox" data-score="s3"><span>объясняет: сухая щётка электризуется и притягивает пыль, влажная проводит заряд, он стекает в землю — <b>1 балл</b></span></label>
       <label class="desc"><input type="checkbox" data-score="s3"><span>пример полезной и вредной электризации и способ защиты (заземление, увлажнение воздуха) — <b>1 балл</b></span></label>
       <p class="mini-note"><b>Полезная:</b> принтер, копирование, покраска краскопультом, электрофильтры. <b>Вредная:</b> одежда, ремни и ленты транспортёров, волокна на ткацком производстве, молния.</p>
-    </div>
+    </div></div>
   </div>
   <div class="answer"><b>Ответ.</b> Сухая щётка — диэлектрик, электризуется трением и притягивает пыль; влажная проводит заряд, он стекает в землю. Защита: заземление, увлажнение воздуха.</div>
 </section>
@@ -289,20 +289,27 @@
   <p class="kick">Конец урока · 5 минут</p>
   <h1 class="title">Итоги урока</h1>
   <div class="cols c3 grow">
-    <div class="panel"><h3>Мои баллы: <b id="scoreBig">0</b> из 10</h3><table><tbody id="scoreTable"></tbody></table><p class="tag" id="grade"></p><p class="mini-note">9–10 отлично · 7–8 хорошо · 5–6 удовлетворительно · менее 5 нужна помощь</p></div>
     <div class="panel"><h3>Вернёмся к целям</h3>
-      <label class="desc"><input type="checkbox" class="goal"><span>Объясню, чем проводники отличаются от диэлектриков</span></label>
-      <label class="desc"><input type="checkbox" class="goal"><span>Объясню электризацию трением и влиянием</span></label>
-      <label class="desc"><input type="checkbox" class="goal"><span>Приведу примеры полезной и вредной электризации</span></label>
-      <p class="feedback" id="goalMsg"></p>
-      <p class="mini-note">Сигнал рукой: палец вверх — всё понял; ладонь набок — есть вопросы; кулак — нужна помощь.</p></div>
+      <p class="big">Достигли ли мы целей? Покажите сигнал рукой по каждой цели.</p>
+      <ol class="big" style="margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.35rem">
+        <li>Объяснить, чем проводники отличаются от диэлектриков.</li>
+        <li>Объяснить электризацию трением и влиянием (индукцией).</li>
+        <li>Привести примеры полезной и вредной электризации.</li>
+      </ol>
+      <p class="mini-note">Палец вверх — всё понятно · ладонь набок — есть вопросы · кулак — нужна помощь.</p></div>
     <div class="panel"><h3>Выходной билет</h3>
-      <p class="mini-note">1. Чем проводник отличается от диэлектрика?</p><textarea id="x1" aria-label="Ответ 1" style="min-height:2.2rem"></textarea>
-      <p class="mini-note">2. В каком порядке заряжают шарик влиянием?</p><textarea id="x2" aria-label="Ответ 2" style="min-height:2.2rem"></textarea>
-      <p class="mini-note">3. Пример вредной электризации и защита.</p><textarea id="x3" aria-label="Ответ 3" style="min-height:2.2rem"></textarea></div>
+      <p class="mini-note">Ответьте на листке или в своём телефоне (раздел «Выходной билет»).</p>
+      <ol class="big" style="margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.45rem">
+        <li>Чем проводник отличается от диэлектрика?</li>
+        <li>В каком порядке заряжают шарик влиянием?</li>
+        <li>Пример вредной электризации и как от неё защититься.</li>
+      </ol></div>
+    <div class="panel"><h3>Результаты класса</h3>
+      <p>Баллы каждого ученика (максимум 10) — на экране результатов: таблица и пьедестал.</p>
+      <a class="btn primary toBoardLink" href="teacher.html" style="text-decoration:none;align-self:flex-start">Открыть результаты класса</a>
+      <p class="mini-note">9–10 отлично · 7–8 хорошо · 5–6 удовлетворительно · менее 5 — нужна помощь.</p></div>
   </div>
-  <div class="panel" style="flex-direction:row;align-items:center;gap:1rem;flex-wrap:wrap"><h3 style="margin:0">Домашнее задание:</h3><span>учебник 1, §18, часть VI: контрольные вопросы 4–5 (стр. 118); «Ответьте на вопросы» №1–2 (стр. 117); по желанию опыт с воздушным шариком и газетой (стр. 119). Следующий урок: закон сохранения электрического заряда.</span>
-    <span class="sp"></span><button class="btn" id="resetAll">Сбросить ответы</button></div>
+  <div class="panel" style="flex-direction:row;align-items:center;gap:1rem;flex-wrap:wrap"><h3 style="margin:0">Домашнее задание:</h3><span>учебник 1, §18, часть VI: контрольные вопросы 4–5 (стр. 118); «Ответьте на вопросы» №1–2 (стр. 117); по желанию опыт с воздушным шариком и газетой (стр. 119). Следующий урок: закон сохранения электрического заряда.</span></div>
 </section>
 
 </main>
