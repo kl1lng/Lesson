@@ -32,6 +32,8 @@
   function toggleTeacher() { var on = document.body.classList.toggle("teacher"); $("#tTeacher").setAttribute("aria-pressed", on); }
   function toggleFull() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); } else { document.exitFullscreen && document.exitFullscreen(); } }
   $("#tTeacher").addEventListener("click", toggleTeacher); $("#tFull").addEventListener("click", toggleFull);
+  /* ссылка на результаты: последняя сессия учителя, если есть; иначе панель учителя */
+  try { var lastCode = localStorage.getItem("physlab-code"); if (lastCode) { $("#toBoard").href = "board.html?c=" + lastCode; } } catch (e) {}
   $("#tSound").addEventListener("click", function () { PL.sound.on = !PL.sound.on; this.setAttribute("aria-pressed", PL.sound.on); PL.pop(2); });
 
   /* ---------- таймер 10 + 30 + 5 ---------- */
