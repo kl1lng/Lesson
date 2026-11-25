@@ -58,9 +58,11 @@
     this.tick = function (t) { self.off = (self.off + 1.4) % self.tot; self.paintFlow(); self.moveParts(); requestAnimationFrame(self.tick); };
     if (!PL.rm) requestAnimationFrame(this.tick); else { this.paintFlow(); }
     this.setCaption("выбери образец");
-    /* кнопки материалов */
-    if (o.pool) { MATS.forEach(function (m) { var b = PL.el("button", { class: "chip", type: "button", text: m.n }, o.pool); b.addEventListener("click", function () { self.test(m); }); }); }
+    /* кнопки материалов: с фото (o.mats) или простые (o.pool) */
+    if (o.mats) { PL.MATERIALS.forEach(function (m) { var b = PL.matBtn(m, o.mats); b.addEventListener("click", function () { self.test(m); self.mark(b, m); }); }); }
+    else if (o.pool) { MATS.forEach(function (m) { var b = PL.el("button", { class: "chip", type: "button", text: m.n }, o.pool); b.addEventListener("click", function () { self.test(m); }); }); }
   }
+  LampLab.prototype.mark = function (b, m) { b.classList.add(m.c ? "cond" : "diel"); };
   LampLab.prototype.pointAt = function (u) {
     var d = u, i = 0;
     while (i < this.seg.length && d > this.seg[i]) { d -= this.seg[i]; i++; }
@@ -84,7 +86,7 @@
       var pt = mk("text", { x: x, y: y, class: "sign", "font-size": 11, fill: "var(--pos)" }, ion); pt.textContent = "+";
     }
     if (m.c) {
-      var kind = m.k, nEl = kind === "ion" ? 8 : 10;
+      var kind = m.kind || m.k, nEl = kind === "ion" ? 8 : 10;
       for (var k = 0; k < nEl; k++) {
         var c = mk("circle", { r: 5, fill: kind === "ion" && k % 2 ? "var(--pos)" : "var(--neg)" }, this.micro);
         this.parts.push({ n: c, x: (Math.random() - .5) * 90, y: (Math.random() - .5) * 80, vx: (Math.random() - .5) * 1.8, vy: (Math.random() - .5) * 1.8 });
@@ -104,7 +106,7 @@
     this.bulb.setAttribute("fill", m.c ? "#ffe27a" : "var(--surface)");
     this.glow.setAttribute("opacity", m.c ? 1 : 0); this.glow.style.transition = "opacity .35s";
     this.buildMicro(m);
-    this.setCaption(m.c ? (m.k === "ion" ? "в растворе движутся ионы" : "свободные электроны") : "заряды связаны, не движутся");
+    this.setCaption(m.c ? ((m.kind || m.k) === "ion" ? "ионы движутся свободно" : "свободные электроны") : "заряды связаны, не движутся");
     if (!PL.rm) this.paintFlow(); else { this.paintFlow(); this.moveParts(); }
     if (this.msg) { this.msg.textContent = (m.c ? "Лампочка горит: " + m.n + " — проводник." : "Лампочка не горит: " + m.n + " — диэлектрик.") + (m.note ? " (" + m.note + ")" : ""); this.msg.className = "feedback " + (m.c ? "ok" : "bad"); }
     if (!this.tested[m.n]) {

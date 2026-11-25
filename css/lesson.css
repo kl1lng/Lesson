@@ -1,0 +1,64 @@
+/* Урок для доски: каждый слайд помещается в экран без прокрутки; стиль в духе презентации (белый фон, синие заголовки, контурные значки) */
+html{font-size:clamp(13px,2.05vh,26px)}
+body.lesson{height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;background:#fff}
+body.lesson .top{position:relative;flex:none;padding:.35rem .9rem;gap:.5rem;box-shadow:none}
+body.lesson .bar{position:relative;flex:none;padding:.35rem .9rem}
+body.lesson main{flex:1;min-height:0;max-width:none;width:100%;margin:0;padding:.7rem 1.4rem .5rem;position:relative}
+body.lesson main::before{content:"";position:absolute;inset:0;background:url(../img/doodle.svg) center/cover no-repeat;pointer-events:none;z-index:0}
+body.lesson .slide{position:relative;z-index:1;height:100%;min-height:0}
+body.lesson .slide.active{display:flex;flex-direction:column;gap:.55rem}
+body.lesson .slide>*{min-height:0}
+.title{color:var(--title);font-weight:750;font-size:1.85rem;line-height:1.15;margin:0;letter-spacing:-.01em}
+.title.big{font-size:2.5rem}
+.kick{color:var(--ink-2);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.sub{font-size:1.05rem;color:var(--ink-2);margin:0;max-width:70ch}
+.grow{flex:1;min-height:0}
+.cols{display:grid;gap:.9rem;min-height:0}
+.cols.c2{grid-template-columns:1fr 1fr}.cols.c3{grid-template-columns:repeat(3,1fr)}.cols.c32{grid-template-columns:1.25fr 1fr}.cols.c23{grid-template-columns:1fr 1.25fr}
+.panel{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:.7rem .9rem;min-height:0;min-width:0;display:flex;flex-direction:column;gap:.4rem}
+.panel h3{color:var(--title);margin:0;font-size:1.15rem}
+.panel p{margin:0;font-size:1rem}
+.lab{padding:.6rem}
+body.lesson .lab .stage svg{max-height:calc(100vh - 20rem);width:auto;margin:0 auto}
+.fitbox{min-height:0;display:flex;flex-direction:column}
+.fitbox>.stage{min-height:0;flex:1;display:grid;place-items:center}
+.fitbox svg{max-height:100%;max-width:100%}
+.mini-note{font-size:.9rem;color:var(--ink-2)}
+.note{margin:0;font-size:1rem}
+.big{font-size:1.25rem}
+.pts{font-size:.8rem}
+/* фото материалов */
+.mats{display:grid;gap:.45rem;min-height:0}
+.mat{position:relative;border:2px solid var(--line);border-radius:12px;background:#fff;padding:0;overflow:hidden;display:flex;flex-direction:column;text-align:center;min-height:0;transition:transform .15s var(--ease),border-color .15s,box-shadow .15s}
+.mat:hover{transform:translateY(-2px);border-color:var(--primary)}
+.mat img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--surface-2)}
+.mat span{font-size:.82rem;font-weight:650;padding:.2rem .15rem;line-height:1.1}
+.mat.sel{border-color:var(--primary);box-shadow:0 0 0 3px rgb(var(--brand-600)/.25)}
+.mat.right{border-color:var(--ok)}.mat.right span{background:var(--ok-soft)}
+.mat.wrong{border-color:var(--bad);animation:shake .4s}
+.mat.used{opacity:.25;pointer-events:none}
+.mat.cond{border-color:var(--ok)}.mat.diel{border-color:var(--ink-2)}
+.mat.cond span{background:var(--ok-soft)}.mat.diel span{background:var(--surface-3)}
+.mat .tick{position:absolute;top:.2rem;right:.2rem;width:1.3rem;height:1.3rem;border-radius:50%;display:none;place-items:center;font-size:.8rem;font-weight:800;color:#fff}
+.mat.cond .tick{display:grid;background:var(--ok)}.mat.diel .tick{display:grid;background:var(--ink-2)}
+.zone{min-height:0;display:flex;flex-direction:column}
+.zone .pool{flex:1;align-content:flex-start}
+.zone .pool .mat{width:5.4rem}
+.zone .pool .mat img{aspect-ratio:1/1}
+.chips-mini .chip{padding:.3rem .6rem;font-size:.9rem}
+.stepdots{display:flex;gap:.3rem}
+.stepdots i{width:.7rem;height:.7rem;border-radius:50%;background:var(--surface-3)}.stepdots i.on{background:var(--primary)}
+textarea{min-height:0;flex:1}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.opts .opt{margin:0;padding:.8rem 1rem;font-size:1.15rem}
+.credit{position:absolute;right:1.4rem;bottom:.15rem;font-size:.68rem;color:var(--ink-2);z-index:2}
+.credit a{color:inherit}
+@media (max-width:900px){
+  body.lesson{height:auto;overflow:auto}body.lesson main{overflow:visible}body.lesson .slide{height:auto}
+  .cols.c2,.cols.c3,.cols.c32,.cols.c23{grid-template-columns:1fr}
+}
+/* фото растягиваются на всю доступную высоту карточки */
+.mats{grid-auto-rows:1fr}
+.mats .mat img{flex:1;min-height:0;aspect-ratio:auto;height:0}
+.panel>.mats{flex:1}
+.mat span{flex:none}

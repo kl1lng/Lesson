@@ -50,7 +50,9 @@
   function table(j) {
     var lb = $("#lb"), n = j.players.length;
     $("#runCount").textContent = n ? "Игроков: " + n + " · заданий выполнено в среднем " + (j.players.reduce(function (s, p) { return s + p.done; }, 0) / n).toFixed(1) + " из " + (j.players[0] ? j.players[0].total : 8) : "Пока никто не вошёл";
-    lb.style.height = (n * ROW) + "px";
+    var top0 = lb.getBoundingClientRect().top, avail = Math.max(120, window.innerHeight - top0 - 70);
+    ROW = Math.max(34, Math.min(82, Math.floor(avail / Math.max(1, n))));
+    lb.style.setProperty("--rh", (ROW - 8) + "px"); lb.style.height = (n * ROW) + "px";
     var names = {};
     j.players.forEach(function (p, i) {
       names[p.name] = 1;
@@ -98,7 +100,7 @@
   /* конфетти */
   function confetti() {
     var cv = $("#conf"), ctx = cv.getContext("2d"); cv.width = innerWidth; cv.height = innerHeight;
-    var cols = ["#f4c542", "#7aa2ff", "#ff8a8a", "#5ed38a", "#ffffff", "#c58bff"], ps = [];
+    var cols = ["#f4c542", "#3b82f6", "#ef4444", "#22c55e", "#ff8a3d", "#a855f7"], ps = [];
     for (var i = 0; i < 160; i++) ps.push({ x: Math.random() * cv.width, y: -20 - Math.random() * cv.height * .5, vx: (Math.random() - .5) * 3, vy: 2 + Math.random() * 4, s: 6 + Math.random() * 8, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[i % cols.length] });
     var t0 = performance.now();
     (function f(t) {

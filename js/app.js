@@ -32,7 +32,6 @@
   function toggleTeacher() { var on = document.body.classList.toggle("teacher"); $("#tTeacher").setAttribute("aria-pressed", on); }
   function toggleFull() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); } else { document.exitFullscreen && document.exitFullscreen(); } }
   $("#tTeacher").addEventListener("click", toggleTeacher); $("#tFull").addEventListener("click", toggleFull);
-  $("#tTheme").addEventListener("click", function () { var r = document.documentElement; r.setAttribute("data-theme", r.getAttribute("data-theme") === "dark" ? "light" : "dark"); });
   $("#tSound").addEventListener("click", function () { PL.sound.on = !PL.sound.on; this.setAttribute("aria-pressed", PL.sound.on); PL.pop(2); });
 
   /* ---------- таймер 10 + 30 + 5 ---------- */
@@ -58,59 +57,53 @@
   $("#e1Reset").addEventListener("click", function () { e1.reset(-8); $("#e1Msg").textContent = "Электроскоп снова заряжен отрицательно."; $("#e1Msg").className = "feedback"; });
   $("#guessBtn").addEventListener("click", function () { $("#topicReveal").classList.add("on"); });
 
-  /* ---------- слайд 3: анимация и сортировка ---------- */
+  /* ---------- слайд 3: анимация и примеры с фото ---------- */
   (function () {
     var c = $("#condDots"), d = $("#dielDots"), dots = [], i, j, k;
-    for (i = 0; i < 14; i++) { var x = 24 + Math.random() * 270, y = 22 + Math.random() * 68; dots.push({ n: mk("circle", { cx: x, cy: y, r: 7, fill: "var(--neg)" }, c), x: x, y: y, vx: (Math.random() - .5) * 1.6, vy: (Math.random() - .5) * 1.6 }); }
-    for (j = 0; j < 5; j++) for (k = 0; k < 14; k++) mk("circle", { cx: 24 + k * 22.5, cy: 24 + j * 17, r: 6, fill: k % 2 ? "var(--neg)" : "var(--pos)" }, d);
+    for (i = 0; i < 12; i++) { var x = 24 + Math.random() * 270, y = 18 + Math.random() * 54; dots.push({ n: mk("circle", { cx: x, cy: y, r: 7, fill: "var(--neg)" }, c), x: x, y: y, vx: (Math.random() - .5) * 1.6, vy: (Math.random() - .5) * 1.6 }); }
+    for (j = 0; j < 4; j++) for (k = 0; k < 14; k++) mk("circle", { cx: 24 + k * 22.5, cy: 20 + j * 17, r: 6, fill: k % 2 ? "var(--neg)" : "var(--pos)" }, d);
+    PL.MATERIALS.filter(function (m) { return ["copper", "saltwater", "hand", "soil"].indexOf(m.k) > -1; }).forEach(function (m) { PL.matBtn(m, $("#exC")).classList.add("cond"); });
+    PL.MATERIALS.filter(function (m) { return ["glass", "rubber", "porcelain", "amber"].indexOf(m.k) > -1; }).forEach(function (m) { PL.matBtn(m, $("#exD")).classList.add("diel"); });
+    $$("#exC .mat, #exD .mat").forEach(function (b) { b.style.pointerEvents = "none"; });
     if (PL.rm) return;
-    (function tick() { dots.forEach(function (o) { o.x += o.vx; o.y += o.vy; if (o.x < 16 || o.x > 304) o.vx *= -1; if (o.y < 16 || o.y > 94) o.vy *= -1; o.n.setAttribute("cx", o.x); o.n.setAttribute("cy", o.y); }); requestAnimationFrame(tick); })();
+    (function tick() { dots.forEach(function (o) { o.x += o.vx; o.y += o.vy; if (o.x < 16 || o.x > 304) o.vx *= -1; if (o.y < 14 || o.y > 76) o.vy *= -1; o.n.setAttribute("cx", o.x); o.n.setAttribute("cy", o.y); }); requestAnimationFrame(tick); })();
   })();
+
+  /* ---------- слайд 4: сортировка по фото ---------- */
   (function () {
-    var mats = [
-      ["Медная проволока", 1], ["Железный гвоздь", 1], ["Алюминиевая ложка", 1], ["Водопроводная вода", 1], ["Раствор соли", 1], ["Тело человека", 1], ["Влажная почва", 1], ["Графитовый грифель", 1],
-      ["Стекло", 0], ["Пластмассовая линейка", 0], ["Резина", 0], ["Сухое дерево", 0], ["Бумага", 0], ["Воздух", 0], ["Фарфор", 0], ["Янтарь", 0], ["Шёлк", 0], ["Керосин", 0]
-    ];
-    var pool = $("#sortPool"), sel = null, done = 0, wrong = 0, msg = $("#sortMsg");
-    mats.slice().sort(function () { return Math.random() - .5; }).forEach(function (m) {
-      var b = PL.el("button", { class: "chip", type: "button", text: m[0] }, pool);
-      b.addEventListener("click", function () { $$(".chip.sel", pool).forEach(function (x) { x.classList.remove("sel"); }); sel = { m: m, b: b }; b.classList.add("sel"); });
+    var grid = $("#sortGrid"), sel = null, done = 0, wrong = 0, msg = $("#sortMsg"), total = PL.MATERIALS.length;
+    PL.MATERIALS.slice().sort(function () { return Math.random() - .5; }).forEach(function (m) {
+      var b = PL.matBtn(m, grid); b.querySelector(".tick").style.display = "none";
+      b.addEventListener("click", function () { $$(".mat.sel", grid).forEach(function (x) { x.classList.remove("sel"); }); sel = { m: m, b: b }; b.classList.add("sel"); });
     });
     function drop(isC, box) {
-      if (!sel) return; var ok = (sel.m[1] === 1) === isC, b = sel.b;
-      if (ok) { b.classList.remove("sel"); b.classList.add("right", "used"); var n = b.cloneNode(true); n.className = "chip right"; n.style.pointerEvents = "none"; box.appendChild(n); done++; msg.textContent = done + " из " + mats.length + " разложено" + (wrong ? ", ошибок: " + wrong : ""); msg.className = "feedback ok"; PL.pop(done % 5); }
-      else { wrong++; b.classList.add("wrong"); setTimeout(function () { b.classList.remove("wrong"); }, 600); msg.textContent = "Не туда: " + sel.m[0] + ". Подумай, есть ли в нём свободные заряды."; msg.className = "feedback bad"; }
-      sel = null; if (done === mats.length) { msg.textContent = "Все предметы разложены! Ошибок: " + wrong; }
+      if (!sel) return; var ok = sel.m.c === isC, b = sel.b;
+      if (ok) { b.classList.remove("sel"); b.classList.add("used"); var n = b.cloneNode(true); n.className = "mat right"; n.style.pointerEvents = "none"; n.querySelector(".tick").style.display = "none"; box.appendChild(n); done++; msg.textContent = done + " из " + total + " разложено" + (wrong ? ", ошибок: " + wrong : ""); msg.className = "feedback ok"; PL.pop(done % 5); }
+      else { wrong++; b.classList.add("wrong"); setTimeout(function () { b.classList.remove("wrong"); }, 600); msg.textContent = "Не туда: " + sel.m.n + ". Подумай, есть ли в нём свободные заряды."; msg.className = "feedback bad"; }
+      sel = null; if (done === total) { msg.textContent = "Все материалы разложены! Ошибок: " + wrong; }
     }
     $("#zoneC").addEventListener("click", function () { drop(true, $("#inC")); });
     $("#zoneD").addEventListener("click", function () { drop(false, $("#inD")); });
     ["#zoneC", "#zoneD"].forEach(function (s) { $(s).addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.click(); } }); });
   })();
 
-  /* ---------- слайд 4: лампочка ---------- */
-  new PL.LampLab($("#lamp"), { pool: $("#matPool"), log: $("#lampLog"), msg: $("#lampMsg"), cnt: $("#lampCnt") });
+  /* ---------- слайд 5: лампочка ---------- */
+  new PL.LampLab($("#lamp"), { mats: $("#matsLamp"), msg: $("#lampMsg"), cnt: $("#lampCnt") });
 
-  /* ---------- слайд 5: песочница ---------- */
+  /* ---------- слайд 6: песочница ---------- */
   var e2 = new PL.Electroscope($("#e2"), { rods: true, rod: "ebonite", tools: true });
-  var e2log = $("#e2Log");
   function fmtN(n) { var r = Math.round(n * 10) / 10; return (r > 0 ? "+" : r < 0 ? "−" : "") + Math.abs(r); }
   e2.onChange = function (s, es) {
     $("#roN").textContent = fmtN(s.N); $("#roTh").textContent = Math.round(s.theta * 2) + "°";
     $("#roRod").textContent = Math.abs(s.rodQ) > .4 ? fmtN(s.rodQ) : "нет заряда";
     $("#e2Narr").textContent = es.describe();
   };
-  e2.onTouch = function (t, old, nw) {
-    if (e2log.querySelector(".empty")) e2log.innerHTML = "";
-    var tr = PL.el("tr", { class: "new" }, e2log); var changed = Math.abs(old - nw) > .3;
-    [t.n, changed ? "опали" : "не изменились", t.why].forEach(function (x) { PL.el("td", { text: x }, tr); });
-    e2.onChange(e2.state, e2);
-  };
+  e2.onTouch = function (t, old, nw) { var m = $("#e2Last"), ch = Math.abs(old - nw) > .3; m.textContent = t.n + ": " + (ch ? "листочки опали" : "листочки не изменились") + ". " + t.why + "."; m.className = "feedback " + (ch ? "ok" : "bad"); e2.onChange(e2.state, e2); };
   $$("#rodSeg button").forEach(function (b) { b.addEventListener("click", function () { $$("#rodSeg button").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); e2.setRodKind(b.dataset.r); }); });
   $("#rubBtn").addEventListener("click", function () { e2.rub(); });
   $("#e2Remove").addEventListener("click", function () { e2.removeRod(); });
-  $("#e2Zero").addEventListener("click", function () { e2.reset(0); e2.setRodKind(e2.rodKind); });
+  $("#e2Zero").addEventListener("click", function () { e2.reset(0); e2.setRodKind(e2.rodKind); $("#e2Last").textContent = ""; });
   $$("#modeSeg button").forEach(function (b) { b.addEventListener("click", function () { $$("#modeSeg button").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); e2.setMode(b.dataset.m); }); });
-  /* кнопки предметов в песочнице лежат внутри хоста e2 — перенесём под нужную подпись */
   (function () { var pool = $(".pool", $("#e2")); if (pool) $("#e2ToolsHost").appendChild(pool); })();
 
   /* ---------- слайд 6: индукция по шагам ---------- */
@@ -124,14 +117,14 @@
     { t: "Шаг 5. Убираем палочку", x: "Заряд электроскопа остаётся положительным: он распределился по шарику и листочкам, и листочки разошлись. Это индуцированный (наведённый) заряд, противоположный заряду палочки.", run: function (d) { e3.msg = ""; e3.removeRod(); setTimeout(d, 800); }, next: "Готово. С начала ↺" }
   ];
   function paintStep() {
-    $("#infNo").textContent = step;
+    $("#infNo").textContent = step; $$("#dots i").forEach(function (d, i) { d.classList.toggle("on", i < step); });
     if (step === 0) { $("#infTitle").textContent = "Шаг 0"; $("#infText").textContent = "Нажми «Шаг 1» и наблюдай за зарядами."; $("#infNext").textContent = "Шаг 1: потереть палочку →"; return; }
     var s = steps[step - 1]; $("#infTitle").textContent = s.t; $("#infText").textContent = s.x; $("#infNext").textContent = step === 5 ? "С начала ↺" : steps[step].t.replace(/^Шаг (\d)\. (.*)$/, function (m, n, t) { return "Шаг " + n + ": " + t.toLowerCase() + " →"; });
   }
   $("#infNext").addEventListener("click", function () {
     if (e3.busy) return;
     if (step === 5) { step = 0; e3.reset(0); e3.setRodKind("ebonite"); paintStep(); return; }
-    step++; var s = steps[step - 1]; $("#infTitle").textContent = s.t; $("#infText").textContent = s.x; $("#infNo").textContent = step;
+    step++; var s = steps[step - 1]; $("#infTitle").textContent = s.t; $("#infText").textContent = s.x; $("#infNo").textContent = step; $$("#dots i").forEach(function (d, i) { d.classList.toggle("on", i < step); });
     s.run(function () {});
     $("#infNext").textContent = step === 5 ? "С начала ↺" : steps[step].t.replace(/^Шаг (\d)\. (.*)$/, function (m, n, t) { return "Шаг " + n + ": " + t.toLowerCase() + " →"; });
   });
@@ -184,7 +177,6 @@
       $("#q3msg").className = "feedback " + (ok ? "ok" : "bad");
     });
   })();
-  $$("#s2tabs button").forEach(function (b) { b.addEventListener("click", function () { $$("#s2tabs button").forEach(function (x) { x.classList.toggle("on", x === b); }); $$(".tpane").forEach(function (p) { p.hidden = p.id !== b.dataset.t; }); }); });
 
   /* ---------- баллы ---------- */
   $$("input[data-score]").forEach(function (c, i) { c.dataset.k = "d" + i; if (store.get(c.dataset.k)) c.checked = true; c.addEventListener("change", function () { store.set(c.dataset.k, c.checked ? 1 : 0); updateScore(); }); });

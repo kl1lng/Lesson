@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru" data-theme="dark">
+<html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,8 +8,9 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/app.css">
 <style>
-body{overflow-x:hidden;background-image:radial-gradient(60% 50% at 50% 0%,rgb(var(--brand-700)/.35),transparent 70%),linear-gradient(var(--bg-grid) 1px,transparent 1px),linear-gradient(90deg,var(--bg-grid) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px}
-.stage{min-height:100vh;display:flex;flex-direction:column;padding:1.2rem 2rem 2rem;max-width:1500px;margin:0 auto}
+body{overflow:hidden;height:100vh;background:#fff url(img/doodle.svg) center/cover no-repeat}
+.stage{height:100vh}
+.stage{display:flex;flex-direction:column;padding:1.2rem 2rem 2rem;max-width:1500px;margin:0 auto}
 .head{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .head h1{font-size:clamp(1.4rem,3vw,2.4rem);margin:0}
 .head small{color:var(--ink-2);font-size:1rem}
@@ -33,12 +34,12 @@ body[data-state="lobby"] #vLobby,body[data-state="running"] #vRun,body[data-stat
 @keyframes pop{from{transform:scale(.3);opacity:0}60%{transform:scale(1.12)}to{transform:none;opacity:1}}
 /* ТАБЛИЦА */
 .lb{position:relative;margin-top:1rem}
-.rowx{position:absolute;left:0;right:0;height:74px;display:grid;grid-template-columns:70px minmax(0,1.2fr) minmax(0,1.5fr) 130px;gap:1rem;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:0 1.2rem;transition:transform .7s var(--ease),border-color .3s,background .3s;will-change:transform}
-.rowx .rk{font-size:1.9rem;font-weight:800;color:var(--ink-2);font-variant-numeric:tabular-nums}
-.rowx .nmx{font-size:1.5rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rowx .pts::after{content:" / 10";font-size:1rem;color:var(--ink-2);font-weight:600}
-.rowx .pts{font-size:1.9rem;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;color:var(--brass)}
-.rowx .pbar{height:16px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.rowx{padding:0 1rem;position:absolute;left:0;right:0;height:var(--rh,74px);display:grid;grid-template-columns:calc(var(--rh,74px)*.9) minmax(0,1.2fr) minmax(0,1.5fr) calc(var(--rh,74px)*2.2);gap:1rem;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:0 1.2rem;transition:transform .7s var(--ease),border-color .3s,background .3s;will-change:transform}
+.rowx .rk{font-size:calc(var(--rh,74px)*.42);font-weight:800;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.rowx .nmx{font-size:calc(var(--rh,74px)*.34);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rowx .pts::after{content:" / 10";font-size:.45em;color:var(--ink-2);font-weight:600}
+.rowx .pts{font-size:calc(var(--rh,74px)*.42);font-weight:800;text-align:right;font-variant-numeric:tabular-nums;color:var(--brass)}
+.rowx .pbar{height:calc(var(--rh,74px)*.22);background:var(--surface-3);border-radius:99px;overflow:hidden}
 .rowx .pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),#7ad0ff);border-radius:99px;transition:width .8s var(--ease)}
 .rowx.r1{border-color:#f4c542;background:linear-gradient(90deg,rgba(244,197,66,.18),var(--surface))}.rowx.r1 .rk{color:#f4c542}
 .rowx.r2{border-color:#c4cbd8}.rowx.r2 .rk{color:#c4cbd8}

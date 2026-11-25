@@ -48,7 +48,9 @@
   P.head = function () { return this.N / 2 - this.p(); };                  /* шарик + стержень */
 
   /* ---- построение SVG ---- */
+  var UID_N = 0;
   P.build = function () {
+    this.uid = "es" + (++UID_N) + "-";
     var host = this.host; host.innerHTML = "";
     var wrap = PL.el("div", { class: "stage" }, host);
     var s = this.svg = mk("svg", { viewBox: "0 0 640 440", role: "img", "aria-label": "Виртуальный электроскоп" }, wrap);
@@ -128,6 +130,14 @@
       self.theta = th; self.angTxt.textContent = th > 1.5 ? "угол ≈ " + Math.round(th * 2) + "°" : "";
     }, { k: 110, c: 8.5 });
     this.spring.set(0);
+    this.uniq(s);
+  };
+  P.uniq = function (svg) {
+    var uid = this.uid;
+    Array.prototype.slice.call(svg.querySelectorAll("[id]")).forEach(function (el) { el.setAttribute("id", uid + el.getAttribute("id")); });
+    Array.prototype.slice.call(svg.querySelectorAll("*")).forEach(function (el) {
+      ["fill", "stroke", "filter"].forEach(function (a) { var v = el.getAttribute(a); if (v && v.indexOf("url(#") === 0 && v.indexOf("url(#" + uid) !== 0) el.setAttribute(a, v.replace("url(#", "url(#" + uid)); });
+    });
   };
 
   /* слот заряда: пара фоновых (все заряды) и жирный знак */
@@ -171,7 +181,7 @@
   };
   P.setRodKind = function (kind) {
     this.rodKind = kind; var r = RODS[kind];
-    this.rodBody.setAttribute("fill", kind === "glass" ? "url(#gGlassRod)" : "url(#gEbonite)");
+    this.rodBody.setAttribute("fill", kind === "glass" ? "url(#" + this.uid + "gGlassRod)" : "url(#" + this.uid + "gEbonite)");
     this.rodLabel.textContent = r.name;
     this.clothTxt.textContent = r.cloth;
     this.clothShape.setAttribute("fill", kind === "glass" ? "#e8d6f5" : "#c9a37a");
@@ -211,7 +221,7 @@
     this.rod.x = 255; this.rod.y = 118; this.placeRodG(); this.paintRod(); this.flash();
   };
   P.flash = function () {
-    var c = mk("circle", { cx: CX, cy: BALL_Y, r: 30, fill: "none", stroke: "#f6c453", "stroke-width": 4, filter: "url(#glow)", opacity: .9 }, this.fx);
+    var c = mk("circle", { cx: CX, cy: BALL_Y, r: 30, fill: "none", stroke: "#f6c453", "stroke-width": 4, filter: "url(#" + this.uid + "glow)", opacity: .9 }, this.fx);
     var t0 = performance.now(); (function f(t) { var k = clamp((t - t0) / 600, 0, 1); c.setAttribute("r", 30 + k * 26); c.setAttribute("opacity", .9 * (1 - k)); if (k < 1) requestAnimationFrame(f); else c.remove(); })(t0);
   };
   P.removeRod = function () {
