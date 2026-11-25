@@ -78,6 +78,7 @@ canvas#conf{position:fixed;inset:0;pointer-events:none;z-index:50}
     <button class="btn primary hostbtn" id="start" hidden>Начать урок</button>
     <button class="btn hostbtn" id="finish" hidden>Завершить и показать итоги</button>
     <button class="btn hostbtn" id="again" hidden>Вернуться к таблице</button>
+    <button class="btn primary hostbtn" id="relobby" hidden>Открыть лобби заново</button>
   </div>
 
   <section class="view" id="vLobby">
@@ -101,6 +102,7 @@ canvas#conf{position:fixed;inset:0;pointer-events:none;z-index:50}
   </section>
 
   <section class="view" id="vEnd">
+    <div class="empty" id="emptyEnd" hidden style="margin-top:12vh"><h2 class="title big" style="color:var(--title)">Урок завершён</h2><p class="lead" style="margin:.5rem auto">В этой сессии не было участников. Чтобы ученики снова смогли войти по ссылке, нажмите «Открыть лобби заново» вверху.</p></div>
     <div class="podium" id="podium"></div>
     <div class="restlist" id="rest"></div>
   </section>

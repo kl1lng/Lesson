@@ -12,6 +12,7 @@
   $("#start").addEventListener("click", function () { setStatus("running"); });
   $("#finish").addEventListener("click", function () { podiumShown = false; viewTable = false; setStatus("finished"); });
   $("#again").addEventListener("click", function () { viewTable = true; render(last); });
+  $("#relobby").addEventListener("click", function () { podiumShown = false; viewTable = false; setStatus("lobby"); });
 
   if (!CODE) { $("#err").hidden = false; $("#err").textContent = "Нет кода сессии в ссылке."; return; }
   $("#code").textContent = CODE;
@@ -29,7 +30,10 @@
     var st = j.status === "finished" && viewTable ? "running" : j.status;
     document.body.dataset.state = st;
     $("#start").hidden = !KEY || j.status !== "lobby"; $("#finish").hidden = !KEY || j.status !== "running" || viewTable && false;
-    $("#again").hidden = !(j.status === "finished" && !viewTable);
+    $("#again").hidden = !(j.status === "finished" && !viewTable && j.players.length);
+    $("#relobby").hidden = !KEY || j.status !== "finished";
+    $("#emptyEnd").hidden = !(j.status === "finished" && !viewTable && !j.players.length);
+    $("#podium").style.display = j.players.length ? "" : "none";
     $("#finish").hidden = !KEY || st !== "running" || j.status === "finished";
     if (st === "lobby") lobby(j); else if (st === "running") table(j); else end(j);
     lastState = st;
