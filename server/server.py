@@ -21,6 +21,7 @@ import secrets
 import sqlite3
 import sys
 import threading
+from contextlib import contextmanager
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs, unquote
@@ -62,10 +63,19 @@ AUTO_MAX = {"o1": 2, "o2": 2, "q3sel": 1}
 TASKS_TOTAL = 7  # для полосы прогресса
 
 
+@contextmanager
 def db():
+    """Соединение с базой, которое ВСЕГДА закрывается (иначе копятся открытые файлы и сервер падает с 502)."""
     c = sqlite3.connect(DB_PATH, timeout=10)
     c.row_factory = sqlite3.Row
-    return c
+    try:
+        yield c
+        c.commit()
+    except Exception:
+        c.rollback()
+        raise
+    finally:
+        c.close()
 
 
 def init_db():
@@ -83,7 +93,8 @@ def teacher_key():
         return k
     p = os.path.join(DATA, "teacher.key")
     if os.path.exists(p):
-        return open(p, encoding="utf-8").read().strip()
+        with open(p, encoding="utf-8") as fh:
+            return fh.read().strip()
     k = secrets.token_urlsafe(6)
     open(p, "w", encoding="utf-8").write(k)
     return k
@@ -133,6 +144,11 @@ def new_code(c):
     raise RuntimeError("no code")
 
 
+class Server(ThreadingHTTPServer):
+    daemon_threads = True
+    request_queue_size = 128
+
+
 class H(BaseHTTPRequestHandler):
     server_version = "PhysLab/2.0"
 
@@ -180,7 +196,8 @@ class H(BaseHTTPRequestHandler):
             p = os.path.join(p, "index.html")
         if not os.path.isfile(p):
             return self.send_error(404)
-        data = open(p, "rb").read()
+        with open(p, "rb") as fh:
+            data = fh.read()
         ctype = mimetypes.guess_type(p)[0] or "application/octet-stream"
         if p.endswith(".html"):
             ctype = "text/html; charset=utf-8"
@@ -421,7 +438,7 @@ def lan_ip():
 
 if __name__ == "__main__":
     init_db()
-    srv = ThreadingHTTPServer((HOST, PORT), H)
+    srv = Server((HOST, PORT), H)
     ip = lan_ip()
     print("PhysLab запущен.")
     print("  Учитель (создать сессию):  http://%s:%d/teacher.html   (ключ: %s)" % (ip, PORT, TKEY))
