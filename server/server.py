@@ -366,7 +366,7 @@ class H(BaseHTTPRequestHandler):
                 auto["q3sel"] = max(auto.get("q3sel", 0), 1 if ok else 0)
                 answers[task] = sel
                 res = {"ok": ok, "points": 1 if ok else 0}
-            elif task in ("s1", "s3", "q3exp", "x1", "x2", "x3", "goals"):
+            elif task in ("s1", "s3", "q3exp", "x1", "x2", "x3", "goals", "hints", "e1", "e2", "e3", "e4"):
                 answers[task] = (val if isinstance(val, (list, dict)) else str(val or "")[:3000])
                 res = {"ok": True, "saved": True}
             else:

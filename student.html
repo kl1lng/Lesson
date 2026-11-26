@@ -25,6 +25,9 @@ details.card summary{cursor:pointer;font-weight:650;font-size:1.1rem}
 #app[data-state="lobby"] #done{display:none}
 .wait h1,#done h1{margin-bottom:.4rem}
 .rank{font-size:3rem;font-weight:800;color:var(--brass)}
+details.hint{margin-top:.6rem;border:1.5px dashed var(--brass);border-radius:12px;background:var(--brass-soft);padding:.4rem .8rem}
+details.hint summary{cursor:pointer;font-weight:700;color:var(--brass)}
+details.hint .hint-body p{margin:.35rem 0}
 </style>
 </head>
 <body>
@@ -62,6 +65,7 @@ details.card summary{cursor:pointer;font-weight:650;font-size:1.1rem}
       <h2>2. Этап 1 <span class="pts">2 балла</span> <span class="status" id="stS1"></span></h2>
       <p class="big">Объясни, чем проводники отличаются от диэлектриков. Приведи по три примера каждых.</p>
       <textarea id="s1" aria-label="Ответ к этапу 1" placeholder="Проводники... Диэлектрики... Примеры: ..."></textarea>
+      <details class="hint" data-h="s1"><summary>Нужна подсказка?</summary><div class="hint-body"><p><b>Проводники</b> — вещества со свободными зарядами. <b>Диэлектрики</b> — свободных зарядов нет.</p><p>Допиши: «В проводниках есть ____ заряды, поэтому заряд по ним ____. В диэлектриках их ____».</p><p>Примеры ищи на слайдах и в лаборатории «Горит ли лампочка?» внизу страницы.</p></div></details>
       <p class="tag" style="margin-top:.4rem">Проверь себя: есть ли в ответе слова про свободные заряды и по три примера каждых?</p>
     </section>
 
@@ -74,6 +78,7 @@ details.card summary{cursor:pointer;font-weight:650;font-size:1.1rem}
         <div class="split"><div><p class="tag">Шаги на выбор</p><div class="pool" id="o1pool"></div></div><div><p class="tag">Твой порядок</p><ol class="order" id="o1list"></ol><p class="empty" id="o1empty">Нажимай шаги по порядку.</p></div></div>
         <div class="row"><button class="btn primary" id="o1check">Проверить</button><button class="btn" id="o1undo">Убрать последний</button><button class="btn" id="o1reset">Сбросить</button></div>
         <p class="feedback" id="o1msg" aria-live="polite"></p>
+        <details class="hint" data-h="o1"><summary>Нужна подсказка?</summary><div class="hint-body"><p>1) Поднеси отрицательный шарик к нейтральному, <b>не касаясь</b>: электроны нейтрального шарика ____ от него.</p><p>2) Коснись нейтрального шарика рукой: электроны уходят в ____.</p><p>3) Что нужно убрать первым: руку или шарик?</p></div></details>
       </div>
       <div class="tpane" id="t2" hidden>
         <h3>Задание 2 (учебник 1, упр. 12, №2)</h3>
@@ -81,11 +86,13 @@ details.card summary{cursor:pointer;font-weight:650;font-size:1.1rem}
         <div class="split"><div><p class="tag">Шаги на выбор</p><div class="pool" id="o2pool"></div></div><div><p class="tag">Твой порядок</p><ol class="order" id="o2list"></ol><p class="empty" id="o2empty">Нажимай шаги по порядку.</p></div></div>
         <div class="row"><button class="btn primary" id="o2check">Проверить</button><button class="btn" id="o2undo">Убрать последний</button><button class="btn" id="o2reset">Сбросить</button></div>
         <p class="feedback" id="o2msg" aria-live="polite"></p>
+        <details class="hint" data-h="o2"><summary>Нужна подсказка?</summary><div class="hint-body"><p>Два шарика стоят <b>вплотную</b> на изолирующих подставках. Поднеси отрицательный шарик, не касаясь.</p><p>Что сделать с шариками, <b>пока</b> заряженный шарик рядом?</p></div></details>
       </div>
       <div class="tpane" id="t3" hidden>
         <h3>Задание 3</h3>
         <p>Электроскоп заряжен. К шарику прикасаются по очереди предметами. В каких случаях листочки опадут? Отметь и объясни.</p>
         <div id="q3"></div><div class="row"><button class="btn primary" id="q3check">Проверить выбор</button></div><p class="feedback" id="q3msg" aria-live="polite"></p>
+        <details class="hint" data-h="q3"><summary>Нужна подсказка?</summary><div class="hint-body"><p>Заряд уходит в землю только через <b>проводник</b> (металл, тело человека). Через <b>диэлектрик</b> (стекло, пластмасса) не уходит.</p><p>Проверь себя в виртуальном электроскопе внизу страницы.</p></div></details>
         <p>Объясни свой выбор (почему именно эти предметы):</p>
         <textarea id="q3exp" aria-label="Объяснение к заданию 3" style="min-height:4.5rem"></textarea>
         <span class="status" id="stQ3exp"></span>
@@ -96,6 +103,7 @@ details.card summary{cursor:pointer;font-weight:650;font-size:1.1rem}
       <h2>4. Этап 3 <span class="pts">2 балла</span> <span class="status" id="stS3"></span></h2>
       <p class="big">Почему пыль прилипает к одежде при чистке её <b>сухой</b> щёткой и не прилипает, если щётка <b>влажная</b>? Приведи по одному примеру полезной и вредной электризации и предложи способ защиты от вредной.</p>
       <textarea id="s3" aria-label="Ответ к этапу 3" placeholder="Сухая щётка... Влажная щётка... Полезная... Вредная... Защита..."></textarea>
+      <details class="hint" data-h="s3"><summary>Нужна подсказка?</summary><div class="hint-body"><p>Сухая щётка — ____ (проводник или диэлектрик?), при трении она ____ и притягивает пыль.</p><p>Влажная щётка ____ заряд, он стекает ____.</p><p>Полезная электризация: принтер, покраска. Вредная: одежда, молния. Защита: заземление, ____ воздуха.</p></div></details>
     </section>
 
     <section class="sec card" id="sX">
@@ -107,6 +115,19 @@ details.card summary{cursor:pointer;font-weight:650;font-size:1.1rem}
       <label class="desc"><input type="checkbox" class="goal"><span>Объясню, чем проводники отличаются от диэлектриков</span></label>
       <label class="desc"><input type="checkbox" class="goal"><span>Объясню электризацию трением и влиянием</span></label>
       <label class="desc"><input type="checkbox" class="goal"><span>Приведу примеры полезной и вредной электризации</span></label>
+    </section>
+
+    <section class="sec card" id="sExtra">
+      <h2>6. Дополнительные задания <span class="status">без баллов</span></h2>
+      <p class="empty">Для тех, кто закончил основные задания. Ответы увидит учитель.</p>
+      <p><b>1.</b> Как зарядить шарик положительным зарядом, имея отрицательно заряженную палочку? (учебник 2, упр. 10, №10)</p>
+      <textarea id="e1" aria-label="Дополнительное задание 1" style="min-height:3.2rem"></textarea>
+      <p><b>2.</b> Можно ли на концах стеклянной палочки получить одновременно разноимённые заряды? А если палочка медная? (учебник 2, упр. 10, №9)</p>
+      <textarea id="e2" aria-label="Дополнительное задание 2" style="min-height:3.2rem"></textarea>
+      <p><b>3.</b> Почему листочки электроскопа расходятся, если к нему только приблизить заряженное тело? (учебник 1, стр. 117, вопрос 5)</p>
+      <textarea id="e3" aria-label="Дополнительное задание 3" style="min-height:3.2rem"></textarea>
+      <p><b>4.</b> Дополни списки полезного и вредного проявления электризации своими примерами (учебник 1, упр. 12д).</p>
+      <textarea id="e4" aria-label="Дополнительное задание 4" style="min-height:3.2rem"></textarea>
     </section>
 
     <details class="sec card">

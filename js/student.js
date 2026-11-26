@@ -79,13 +79,18 @@
   });
 
   /* ---------- открытые ответы (автосохранение) ---------- */
-  [["s1", "stS1"], ["s3", "stS3"], ["q3exp", "stQ3exp"], ["x1", "stX"], ["x2", "stX"], ["x3", "stX"]].forEach(function (p) {
+  [["s1", "stS1"], ["s3", "stS3"], ["q3exp", "stQ3exp"], ["x1", "stX"], ["x2", "stX"], ["x3", "stX"], ["e1", ""], ["e2", ""], ["e3", ""], ["e4", ""]].forEach(function (p) {
     var t = $("#" + p[0]), timer = null;
     function flush() { clearTimeout(timer); send(p[0], t.value); }
     t.addEventListener("input", function () { setSave("пишу…"); clearTimeout(timer); timer = setTimeout(flush, 1200); });
     t.addEventListener("blur", flush);
   });
   $$(".goal").forEach(function (c, i) { c.addEventListener("change", function () { send("goals", $$(".goal").map(function (x) { return x.checked ? 1 : 0; })); }); });
+
+  /* ---------- подсказки: учитель видит, кто ими пользовался ---------- */
+  $$("details.hint").forEach(function (d) { d.addEventListener("toggle", function () {
+    if (!d.open) return; var used = (answers.hints || []).slice(); if (used.indexOf(d.dataset.h) < 0) { used.push(d.dataset.h); answers.hints = used; send("hints", used); }
+  }); });
 
   /* ---------- порядок шагов ---------- */
   var STEPS = {
@@ -125,7 +130,7 @@
 
   /* ---------- восстановление сохранённых ответов ---------- */
   function restore() {
-    ["s1", "s3", "q3exp", "x1", "x2", "x3"].forEach(function (k) { if (typeof answers[k] === "string") $("#" + k).value = answers[k]; });
+    ["s1", "s3", "q3exp", "x1", "x2", "x3", "e1", "e2", "e3", "e4"].forEach(function (k) { if (typeof answers[k] === "string" && $("#" + k)) $("#" + k).value = answers[k]; });
     if (Array.isArray(answers.goals)) $$(".goal").forEach(function (c, i) { c.checked = !!answers.goals[i]; });
     if (Array.isArray(answers.q3)) answers.q3.forEach(function (i) { var c = $("#q3 input[data-i='" + i + "']"); if (c) c.checked = true; });
     if (answers.check1 !== undefined) { var b = $$("#check1 .opt")[answers.check1]; if (b) b.classList.add(answers.check1 === 1 ? "right" : "wrong"); }

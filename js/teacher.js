@@ -108,10 +108,13 @@
     var a = r.answers || {};
     function block(title) { return "<h3 style='margin-top:.8rem'>" + title + "</h3><div class='ans'></div>"; }
     box.innerHTML = "<h3></h3><p class='hint'>Авто: " + r.autoScore + " · Учитель: " + r.teacherScore + " · Итого: <b>" + r.score10 + "</b> из 10 . Попыток: З1 " + ((a.o1 && a.o1.tries) || 0) + ", З2 " + ((a.o2 && a.o2.tries) || 0) + ".</p>" +
-      block("Этап 1") + block("Задание 3: объяснение") + block("Этап 3") + block("Выходной билет");
+      block("Этап 1") + block("Задание 3: объяснение") + block("Этап 3") + block("Выходной билет") + block("Подсказки и дополнительные задания");
     box.querySelector("h3").textContent = r.name;
     var ans = box.querySelectorAll(".ans");
     ans[0].textContent = a.s1 || "— нет ответа —"; ans[1].textContent = a.q3exp || "— нет ответа —"; ans[2].textContent = a.s3 || "— нет ответа —";
+    var HN = { s1: "этап 1", o1: "задание 1", o2: "задание 2", q3: "задание 3", s3: "этап 3" };
+    ans[4].textContent = "Открывал(а) подсказки: " + ((a.hints || []).map(function (k) { return HN[k] || k; }).join(", ") || "нет") +
+      ["e1", "e2", "e3", "e4"].map(function (k, i) { return a[k] ? "\nДоп. " + (i + 1) + ": " + a[k] : ""; }).join("");
     ans[3].textContent = ["x1", "x2", "x3"].map(function (k, i) { return (i + 1) + ". " + (a[k] || "—"); }).join("\n") + (Array.isArray(a.goals) ? "\nЦели достигнуты: " + a.goals.reduce(function (s, v) { return s + v; }, 0) + " из 3" : "");
     var cr = document.createElement("div"); cr.innerHTML = "<h3 style='margin-top:.8rem'>Оценка по дескрипторам</h3>";
     CRIT.forEach(function (c) {
